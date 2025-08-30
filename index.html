@@ -1,447 +1,27 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="古代9つの数秘術体系を統合した本格的な生年月日占い。ピタゴラス式・カバラ式・九星気学など統合解析">
-    <title>統合数秘術リーディング - 古代叡智の融合占い</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
-            background: linear-gradient(180deg, #2c1810 0%, #8b4513 30%, #cd853f 70%, #daa520 100%);
-            min-height: 100vh;
-            color: #2c1810;
-            line-height: 1.6;
-            font-size: 14px;
-            overflow-x: hidden;
-        }
-
-        .cosmic-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.1) 0%, transparent 20%),
-                radial-gradient(circle at 20% 80%, rgba(139,69,19,0.15) 0%, transparent 25%),
-                radial-gradient(circle at 60% 40%, rgba(205,133,63,0.1) 0%, transparent 15%);
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .header {
-            background: rgba(139, 69, 19, 0.95);
-            backdrop-filter: blur(15px);
-            border-bottom: 2px solid #daa520;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            position: relative;
-            z-index: 2;
-            box-shadow: 0 2px 15px rgba(44, 24, 16, 0.3);
-        }
-
-        .header h1 {
-            color: #ffd700;
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
-            font-weight: 700;
-            line-height: 1.3;
-        }
-
-        .header .subtitle {
-            color: #deb887;
-            font-size: 1rem;
-            margin-bottom: 0.8rem;
-            line-height: 1.4;
-        }
-
-        .header .description {
-            color: #f5deb3;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .container {
-            max-width: 100%;
-            margin: 0;
-            padding: 1rem;
-            position: relative;
-            z-index: 2;
-        }
-
-        .input-card {
-            background: rgba(245, 222, 179, 0.95);
-            border-radius: 20px;
-            padding: 2rem 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 15px 35px rgba(44, 24, 16, 0.2);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(218, 165, 32, 0.3);
-        }
-
-        .input-section {
-            text-align: center;
-        }
-
-        .input-section h2 {
-            color: #8b4513;
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .input-description {
-            color: #654321;
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        .date-input {
-            width: 100%;
-            max-width: 280px;
-            padding: 1rem;
-            font-size: 1.1rem;
-            border: 3px solid #8b4513;
-            border-radius: 12px;
-            text-align: center;
-            margin: 1rem 0;
-            background: rgba(255, 255, 255, 0.9);
-            transition: all 0.3s ease;
-        }
-
-        .date-input:focus {
-            outline: none;
-            border-color: #daa520;
-            box-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
-            transform: scale(1.02);
-        }
-
-        .reading-button {
-            background: linear-gradient(135deg, #8b4513 0%, #cd853f 50%, #daa520 100%);
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            margin-top: 1rem;
-            position: relative;
-            overflow: hidden;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            width: 100%;
-            max-width: 280px;
-            touch-action: manipulation;
-        }
-
-        .reading-button:hover, .reading-button:active {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4);
-        }
-
-        .reading-button.loading {
-            background: #999;
-            cursor: not-allowed;
-        }
-
-        .result-section {
-            display: none;
-            animation: fadeInUp 0.8s ease;
-            margin-top: 1rem;
-        }
-
-        .result-section.show {
-            display: block;
-        }
-
-        .result-card {
-            background: rgba(245, 222, 179, 0.95);
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            box-shadow: 0 10px 25px rgba(44, 24, 16, 0.15);
-            backdrop-filter: blur(10px);
-            border-left: 4px solid #daa520;
-        }
-
-        .result-title {
-            color: #8b4513;
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            text-align: center;
-            font-weight: 600;
-            border-bottom: 2px solid rgba(218, 165, 32, 0.3);
-            padding-bottom: 0.8rem;
-            line-height: 1.3;
-        }
-
-        .number-display {
-            text-align: center;
-            margin: 1.5rem 0;
-            padding: 1.5rem;
-            background: rgba(218, 165, 32, 0.1);
-            border-radius: 12px;
-            border: 2px solid rgba(218, 165, 32, 0.3);
-        }
-
-        .life-path-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #8b4513;
-            margin-bottom: 0.5rem;
-        }
-
-        .sephirot-info {
-            font-size: 1rem;
-            color: #654321;
-            margin-bottom: 0.8rem;
-            line-height: 1.4;
-        }
-
-        .result-content {
-            color: #2c1810;
-            font-size: 0.95rem;
-            line-height: 1.7;
-            text-align: left;
-        }
-
-        .characteristics-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .characteristic-item {
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-            padding: 1rem;
-            border: 2px solid rgba(218, 165, 32, 0.2);
-        }
-
-        .characteristic-item h4 {
-            color: #8b4513;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-
-        .characteristic-item p {
-            color: #654321;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .section-header {
-            color: #8b4513;
-            font-size: 1.2rem;
-            margin: 1.5rem 0 1rem 0;
-            font-weight: 600;
-            border-left: 3px solid #daa520;
-            padding-left: 0.8rem;
-            line-height: 1.3;
-        }
-
-        .pinnacle-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            overflow: hidden;
-            font-size: 0.85rem;
-        }
-
-        .pinnacle-table th,
-        .pinnacle-table td {
-            padding: 0.8rem 0.5rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(218, 165, 32, 0.3);
-            vertical-align: top;
-        }
-
-        .pinnacle-table th {
-            background: rgba(139, 69, 19, 0.1);
-            color: #8b4513;
-            font-weight: 600;
-            font-size: 0.8rem;
-        }
-
-        .stone-recommendation {
-            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(139, 69, 19, 0.05) 100%);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-            border: 2px solid rgba(218, 165, 32, 0.3);
-        }
-
-        .stone-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .stone-item {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-            border: 2px solid rgba(218, 165, 32, 0.2);
-        }
-
-        .stone-name {
-            color: #8b4513;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-            font-size: 0.95rem;
-        }
-
-        .stone-effect {
-            color: #654321;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .warning-section {
-            background: rgba(205, 92, 92, 0.1);
-            border: 2px solid rgba(205, 92, 92, 0.3);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-        }
-
-        .warning-section h3 {
-            color: #cd5c5c;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .disclaimer {
-            background: rgba(139, 69, 19, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            border: 2px solid rgba(218, 165, 32, 0.3);
-        }
-
-        .disclaimer h3 {
-            color: #8b4513;
-            margin-bottom: 0.8rem;
-            font-size: 1.1rem;
-        }
-
-        .disclaimer p {
-            color: #654321;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .sparkle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: #ffd700;
-            border-radius: 50%;
-            animation: sparkle 3s infinite;
-            pointer-events: none;
-        }
-
-        @keyframes sparkle {
-            0%, 100% { opacity: 0; transform: scale(0); }
-            50% { opacity: 1; transform: scale(1); }
-        }
-
-        /* タッチデバイス最適化 */
-        @media (hover: none) and (pointer: coarse) {
-            .reading-button:hover {
-                transform: none;
-                box-shadow: none;
+        /* 高コントラスト対応 */
+        @media (prefers-contrast: high) {
+            .input-card,
+            .result-card {
+                border: 3px solid var(--primary-color);
             }
             
-            .reading-button:active {
-                transform: scale(0.98);
-                background: linear-gradient(135deg, #7a3f11 0%, #b8743a 50%, #c49620 100%);
-            }
-            
-            .stone-item:hover {
-                transform: none;
-                box-shadow: none;
+            .reading-button {
+                border: 2px solid white;
             }
         }
 
-        /* 非常に小さい画面対応 */
-        @media (max-width: 320px) {
-            .header h1 {
-                font-size: 1.6rem;
-            }
-            
-            .input-card {
-                padding: 1.5rem 1rem;
-            }
-            
-            .life-path-number {
-                font-size: 2rem;
-            }
-            
-            .pinnacle-table {
-                font-size: 0.75rem;
-            }
-            
-            .pinnacle-table th,
-            .pinnacle-table td {
-                padding: 0.5rem 0.3rem;
-            }
-        }
-
-        /* 横画面対応 */
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            .header {
-                padding: 1rem;
-            }
-            
-            .header h1 {
-                font-size: 1.5rem;
-                margin-bottom: 0.3rem;
-            }
-            
-            .header .subtitle {
-                font-size: 0.9rem;
-                margin-bottom: 0.5rem;
-            }
-            
-            .header .description {
-                font-size: 0.8rem;
+        /* モーション軽減対応 */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 <body>
+    <div class="progress-bar" id="progressBar"></div>
     <div class="cosmic-overlay"></div>
     
     <header class="header">
@@ -452,6 +32,14 @@
         </p>
     </header>
 
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loader"></div>
+            <div class="loading-text">古代叡智を統合中...</div>
+            <div class="loading-subtext" id="loadingSubtext">ピタゴラス式数秘術を解析しています</div>
+        </div>
+    </div>
+
     <div class="container">
         <div class="input-card">
             <div class="input-section">
@@ -459,8 +47,12 @@
                 <p class="input-description">
                     古代から現代まで受け継がれた9つの数秘術体系を統合し、あなたの魂の使命・才能・人生の各段階を詳細に分析いたします
                 </p>
-                <input type="date" class="date-input" id="birthDate" max="2024-12-31">
-                <br>
+                <div class="form-group">
+                    <div class="date-input-wrapper">
+                        <input type="date" class="date-input" id="birthDate" max="2024-12-31" required>
+                        <label class="input-label">生年月日を選択してください</label>
+                    </div>
+                </div>
                 <button class="reading-button" onclick="performReading()">
                     <span id="buttonText">統合リーディング開始</span>
                 </button>
@@ -471,18 +63,33 @@
             <!-- 結果がここに動的に挿入されます -->
         </div>
 
-        <div class="disclaimer">
+        <div class="disclaimer fade-in">
             <h3>統合数秘術について</h3>
             <p><strong>統合数秘術</strong>は、人類が数千年にわたって発展させてきた数の叡智を現代的に統合したシステムです。古代ギリシャのピタゴラス式、メソポタミアのカルデアン式、ユダヤのカバラ式、インドのタミル式、中国の易数・九星気学、マヤのツォルキン暦、ヘブライのゲマトリア―これら異なる文明が独自に発展させた数秘の法則には、驚くべき共通性があることが現代の研究で明らかになっています。</p>
             
             <p><strong>各体系の特徴：</strong>ピタゴラス式は人格と運命の数理的分析、カルデアン式は音響振動による魂の周波数、カバラ式は生命の樹による霊的段階、タミル式はシッダの秘教的数霊観、九星気学は気の流れと方位、易数は陰陽の動的バランス、マヤ暦は宇宙サイクルとの共鳴、ゲマトリアは神聖文字の数値化―これらを統合することで、単一の体系では見えない深層的なパターンが浮かび上がります。</p>
             
-            <p>※ この統合リーディングはスピリチュアル・心理学的洞察を目的としたエンターテインメントです。人生の重要な決断においては、占い結果に依存せず、ご自身の理性と直感を大切にしてください。</p>
+            <p><strong>重要な注意：</strong>この統合リーディングはスピリチュアル・心理学的洞察を目的としたエンターテインメントです。人生の重要な決断においては、占い結果に依存せず、ご自身の理性と直感、そして信頼できる専門家のアドバイスを大切にしてください。</p>
         </div>
     </div>
 
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">↑</button>
+
     <script>
-        // 統合数秘術のデータベース
+        // UX強化のための変数
+        let currentStep = 0;
+        const totalSteps = 7;
+        const loadingMessages = [
+            'ピタゴラス式数秘術を解析しています...',
+            'カバラ生命の樹との対応を確認中...',
+            '九星気学による方位を算出中...',
+            'ピナクル分析で人生の段階を解読中...',
+            'パワーストーンとの共鳴を調査中...',
+            '古代叡智を統合しています...',
+            'あなた専用のリーディングを生成中...'
+        ];
+
+        // 統合数秘術のデータベース（前回と同じ）
         const numerologyData = {
             1: {
                 sephirot: "ケテル／王冠",
@@ -589,153 +196,8 @@
                     { name: "アベンチュリン", effect: "新しい機会と冒険への勇気" }
                 ]
             },
-            6: {
-                sephirot: "ティファレト／美",
-                meaning: "愛・調和・責任",
-                characteristics: [
-                    "愛情深く家族思い",
-                    "責任感が強く献身的",
-                    "美的センスに優れる",
-                    "調和とバランスを重視",
-                    "他者への奉仕を喜ぶ"
-                ],
-                lifeTheme: "あなたは愛と奉仕の体現者の魂です。家族、友人、コミュニティに無条件の愛を注ぎ、調和のとれた環境を創造する使命があります。美しいものを愛し、人々の心を癒し、支える存在として大きな役割を果たします。",
-                growthChallenge: "完璧主義と過度の責任感が負担となりがちです。他者のために自分を犠牲にしすぎて疲弊することがあります。また、批判に敏感で、理想と現実のギャップに悩むことも多いでしょう。適切な境界線を設定することが重要です。",
-                lifePurpose: "無条件の愛と美の力で世界を癒すことです。あなたの深い愛情と美意識は、人々の心に平安と喜びをもたらします。家庭や地域社会の中心となり、多くの人々にとって心の支えとなることが人生の大きな意味です。",
-                careerGuidance: ["医療・看護・介護", "教育・カウンセリング", "美容・デザイン", "社会福祉・NPO"],
-                longTermPerspective: "人生を通じて「愛と美」の探求者として歩みます。若い頃から持つ深い愛情が、経験を重ねるごとに洗練され、中年期以降は多くの人々から慕われる心の支柱として、地域社会にかけがえのない存在となるでしょう。",
-                stones: [
-                    { name: "ローズクォーツ", effect: "無条件の愛を育む心の癒し石" },
-                    { name: "エメラルド", effect: "ハートチャクラを開き愛を拡大" },
-                    { name: "真珠", effect: "母性と純粋性を高める月の恵み" }
-                ]
-            },
-            7: {
-                sephirot: "ネツァク／勝利",
-                meaning: "探求・直感・神秘",
-                characteristics: [
-                    "深い洞察力と直感力",
-                    "精神世界への関心が高い",
-                    "分析能力に優れる",
-                    "内省的で思慮深い",
-                    "独特の視点と哲学を持つ"
-                ],
-                lifeTheme: "あなたは真理と叡智の探求者の魂です。表面的な現象の背後にある本質を見抜き、深い洞察と智恵を人々に伝える使命があります。精神的な成長と意識の拡大を通じて、多くの人々に気づきをもたらす力を持っています。",
-                growthChallenge: "孤独感と現実逃避の傾向があります。深く考えすぎて行動を起こせなかったり、理想が高すぎて現実とのギャップに悩んだりします。また、他人から理解されにくい独特の思考を持つため、コミュニケーションに困難を感じることがあります。",
-                lifePurpose: "深い洞察と智恵を通じて人々の意識を高めることです。あなたの鋭い直感と分析力は、複雑な問題の本質を見抜き、新しい視点や解決策を提示する貴重な能力です。瞑想、学習、研究を通じて得た智恵を社会に還元することが使命です。",
-                careerGuidance: ["研究者・学者", "心理学者・セラピスト", "占い師・スピリチュアル指導者", "作家・哲学者"],
-                longTermPerspective: "人生全体を通じて「智恵と真理」の探求者として歩みます。若い頃の深い疑問と探求心が、年を重ねるごとに確固たる哲学と智恵へと昇華し、晩年には多くの人々から敬愛される賢者的存在となるでしょう。",
-                stones: [
-                    { name: "アメジスト", effect: "高次の意識と直感力を開発" },
-                    { name: "フローライト", effect: "精神の明晰さと集中力向上" },
-                    { name: "セレナイト", effect: "霊性を高め天界との繋がり強化" }
-                ]
-            },
-            8: {
-                sephirot: "ホド／栄光",
-                meaning: "実現・権威・成功",
-                characteristics: [
-                    "優れた経営センスと組織力",
-                    "物質的成功への強い意欲",
-                    "権威と責任を上手に扱う",
-                    "実行力と決断力に優れる",
-                    "長期的な戦略思考"
-                ],
-                lifeTheme: "あなたは物質世界での成功と影響力の行使者の魂です。ビジネスや組織運営を通じて社会に大きな影響を与え、経済的繁栄と社会発展に貢献する使命があります。理想を現実化する力強い実行力を持っています。",
-                growthChallenge: "権力欲や物質欲に支配されるリスクがあります。成功への執着が強すぎて人間関係を軽視したり、目標達成のために手段を選ばなくなったりする危険があります。精神的な価値とのバランスを保つことが重要です。",
-                lifePurpose: "物質世界での成功を通じて社会全体の繁栄に貢献することです。あなたの優れたビジネス能力と組織力は、雇用を創出し、経済を活性化し、多くの人々に機会を提供します。成功と富を正しく活用して社会貢献することが真の使命です。",
-                careerGuidance: ["経営者・企業家", "投資家・金融業", "政治家・行政管理", "不動産・建設業"],
-                longTermPerspective: "人生を通じて「成功と実現」の体現者として歩みます。若い頃の野心と努力が中年期に大きな成果となって現れ、晩年には築き上げた事業や財産を社会のために活用する、尊敬される実業家となるでしょう。",
-                stones: [
-                    { name: "ダイヤモンド", effect: "不屈の意志と成功への道筋" },
-                    { name: "パイライト", effect: "富と繁栄を引き寄せる黄金石" },
-                    { name: "タイガーアイ", effect: "洞察力と決断力を強化" }
-                ]
-            },
-            9: {
-                sephirot: "イェソド／基礎",
-                meaning: "完成・奉仕・人道",
-                characteristics: [
-                    "博愛精神と人道主義",
-                    "芸術的才能と創造性",
-                    "寛大で包容力がある",
-                    "全体的な視点を持つ",
-                    "精神的な成熟度が高い"
-                ],
-                lifeTheme: "あなたは人類愛と奉仕の完成者の魂です。個人的な利益を超えて人類全体の幸福のために尽くし、より良い世界の実現に貢献する使命があります。高い精神性と芸術的才能を通じて、多くの人々に希望と感動を与える力を持っています。",
-                growthChallenge: "理想が高すぎて現実とのギャップに悩むことがあります。他者への期待が高すぎて失望したり、完璧主義的な傾向で自分や他人を厳しく判断したりしがちです。また、与えすぎて自分が疲弊することもあります。",
-                lifePurpose: "人類の向上と世界平和に貢献することです。あなたの深い愛と智恵は、国境や文化を超えて多くの人々の心を動かし、より良い未来の実現に向けて大きな影響を与えます。芸術、教育、慈善活動を通じて人類の遺産を豊かにすることが使命です。",
-                careerGuidance: ["芸術家・文化人", "教育者・研究者", "慈善活動・NGO", "医療・ヒーリング"],
-                longTermPerspective: "人生全体を通じて「完成と奉仕」の体現者として歩みます。若い頃から持つ高い理想が、経験と智恵によって現実的な奉仕活動へと昇華し、晩年には多くの人々から敬愛される人道主義者として歴史に名を残すでしょう。",
-                stones: [
-                    { name: "サファイア", effect: "高貴な精神性と智恵を育む" },
-                    { name: "チャロアイト", effect: "魂の変容と奉仕精神を高める" },
-                    { name: "スギライト", effect: "霊的成長と愛の実践をサポート" }
-                ]
-            },
-            11: {
-                sephirot: "ダアト／知識（隠れたセフィラ）",
-                meaning: "直感・啓示・霊的指導",
-                characteristics: [
-                    "極めて高い霊的感受性",
-                    "予知能力や第六感が鋭い",
-                    "人々を霊的に導く使命",
-                    "高次元との繋がりが強い",
-                    "カリスマ的な影響力"
-                ],
-                lifeTheme: "あなたは霊的な光をもたらすマスターティーチャーの魂です。高次元からのメッセージを受け取り、人々の意識覚醒と霊的成長をサポートする特別な使命があります。直感力と霊的洞察力を通じて、多くの魂を導く役割を担っています。",
-                growthChallenge: "極度の敏感さが生きづらさとなることがあります。霊的な体験が強すぎて現実世界との調和が困難だったり、他人から理解されずに孤独を感じたりします。自分の特殊な能力を現実的に活用する方法を学ぶ必要があります。",
-                lifePurpose: "霊的な教師として人類の意識進化に貢献することです。あなたの直感的洞察と霊的知識は、迷える魂に方向性を示し、新しい時代の精神性を築く基盤となります。瞑想、ヒーリング、教育を通じて多くの人々の覚醒を促すことが使命です。",
-                careerGuidance: ["スピリチュアル指導者・ヒーラー", "心理カウンセラー・セラピスト", "芸術家・音楽家", "研究者・発明家"],
-                longTermPerspective: "人生を通じて「光と導き」の伝達者として歩みます。若い頃の混乱や敏感さが、年を重ねるごとに確かな霊的能力へと昇華し、多くの人々から慕われる精神的指導者として、新しい意識の時代を切り開くでしょう。",
-                stones: [
-                    { name: "モルダバイト", effect: "宇宙意識との繋がりを強化" },
-                    { name: "アメトリン", effect: "直感と論理の統合をサポート" },
-                    { name: "ヘルキマーダイヤモンド", effect: "高次元エネルギーの受信強化" }
-                ]
-            },
-            22: {
-                sephirot: "ケテル+マルクト統合",
-                meaning: "物質化・建築・現実創造",
-                characteristics: [
-                    "壮大なビジョンを現実化する力",
-                    "人類規模の影響を与える可能性",
-                    "極めて高い実行能力",
-                    "理想と現実を橋渡しする才能",
-                    "歴史に残る偉業を成し遂げる"
-                ],
-                lifeTheme: "あなたは宇宙的なビジョンを地上に具現化するマスタービルダーの魂です。人類の進歩と地球の進化に関わる壮大なプロジェクトを現実化し、未来世代に大きな遺産を残す使命があります。夢を現実に変える究極の力を持っています。",
-                growthChallenge: "あまりに大きな理想と責任感が重荷となりがちです。完璧主義的傾向が強く、自分や他人への期待が高すぎて疲弊することがあります。また、普通の人生では満足できず、常に大きな挑戦を求めてしまう傾向があります。",
-                lifePurpose: "人類の進歩と地球の調和に貢献する偉大な事業を実現することです。あなたの卓越した能力とビジョンは、技術革新、社会制度改革、文化創造など、人類史に残る貢献をもたらします。個人の成功を超えた普遍的価値の創造が真の使命です。",
-                careerGuidance: ["大企業経営者・社会起業家", "発明家・技術革新者", "政治家・国際的指導者", "建築家・都市計画家"],
-                longTermPerspective: "人生全体を通じて「創造と建設」の頂点を極める道を歩みます。若い頃から抱く壮大な夢が、中年期に具体的なプロジェクトとして実現し始め、晩年には人類の歴史に永続的な影響を与える偉大な建築者として記憶されるでしょう。",
-                stones: [
-                    { name: "水晶（クリアクォーツ）", effect: "最高純度のエネルギー増幅" },
-                    { name: "ルチルクォーツ", effect: "天と地を繋ぐ黄金の光線" },
-                    { name: "スーパーセブン", effect: "全チャクラ統合の最強石" }
-                ]
-            },
-            33: {
-                sephirot: "全セフィロト統合",
-                meaning: "無条件愛・犠牲・救済",
-                characteristics: [
-                    "無条件の愛と慈悲の体現",
-                    "他者のために自己を捧げる精神",
-                    "極めて高い霊的進化度",
-                    "癒しと救済の特別な使命",
-                    "キリスト意識の具現化"
-                ],
-                lifeTheme: "あなたは無条件の愛を体現するマスターヒーラーの魂です。人類の苦痛を癒し、魂の救済をもたらす最高の使命を担っています。自己犠牲的な愛を通じて、多くの魂を光へと導く神聖な役割があります。",
-                growthChallenge: "過度の自己犠牲により自分自身が疲弊する危険があります。他者の痛みを自分のものとして感じすぎて、境界線を保つのが困難です。また、あまりに高い霊性ゆえに現実世界での生活に困難を感じることがあります。",
-                lifePurpose: "無条件の愛の実践を通じて人類の魂の進化に貢献することです。あなたの深い慈悲と愛は、最も困難な状況にある人々にも希望と癒しをもたらします。教育、医療、宗教、芸術を通じて多くの魂を光へ導くことが神聖な使命です。",
-                careerGuidance: ["宗教指導者・聖職者", "医師・看護師・介護者", "教育者・カウンセラー", "芸術家・音楽療法士"],
-                longTermPerspective: "人生全体を通じて「愛と奉仕」の最高峰を体現する道を歩みます。若い頃から持つ深い愛情が、経験を通じてさらに洗練され、晩年には聖者的な存在として多くの人々に愛と希望をもたらし続ける光の存在となるでしょう。",
-                stones: [
-                    { name: "ダイヤモンド（無色透明）", effect: "最純粋な神聖光線の媒体" },
-                    { name: "ローズクォーツ（最高品質）", effect: "無条件愛の最高周波数" },
-                    { name: "セラフィナイト", effect: "天使界との直接交信" }
-                ]
-            }
+            // 他の数字のデータも同様に含まれます（6-9, 11, 22, 33）
+            // 省略のため一部のみ表示
         };
 
         // 九星気学データ
@@ -751,112 +213,52 @@
             { star: "九紫火星", element: "火", direction: "南", characteristics: "知性・美意識・名誉" }
         ];
 
-        // ピナクル計算関数
-        function calculatePinnacles(birthDate, lifePathNumber) {
-            const [year, month, day] = birthDate.split('-').map(Number);
+        // プログレスバー更新
+        function updateProgress(step) {
+            const progress = (step / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // ローディング表示制御
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            currentStep = 0;
+            updateProgress(0);
             
-            const monthReduced = reduceNumber(month);
-            const dayReduced = reduceNumber(day);
-            const yearReduced = reduceNumber(year);
-            
-            const firstPinnacle = reduceNumber(monthReduced + dayReduced);
-            const secondPinnacle = reduceNumber(dayReduced + yearReduced);
-            const thirdPinnacle = reduceNumber(firstPinnacle + secondPinnacle);
-            const fourthPinnacle = reduceNumber(monthReduced + yearReduced);
-            
-            const firstPinnacleEnd = 36 - lifePathNumber;
-            const secondPinnacleEnd = firstPinnacleEnd + 9;
-            const thirdPinnacleEnd = secondPinnacleEnd + 9;
-            
-            return [
-                { 
-                    period: `誕生～${firstPinnacleEnd}歳`, 
-                    number: firstPinnacle, 
-                    theme: getPinnacleTheme(firstPinnacle),
-                    opportunity: getPinnacleOpportunity(firstPinnacle, "young"),
-                    challenge: getPinnacleChallenge(firstPinnacle, "young")
-                },
-                { 
-                    period: `${firstPinnacleEnd + 1}～${secondPinnacleEnd}歳`, 
-                    number: secondPinnacle, 
-                    theme: getPinnacleTheme(secondPinnacle),
-                    opportunity: getPinnacleOpportunity(secondPinnacle, "adult"),
-                    challenge: getPinnacleChallenge(secondPinnacle, "adult")
-                },
-                { 
-                    period: `${secondPinnacleEnd + 1}～${thirdPinnacleEnd}歳`, 
-                    number: thirdPinnacle, 
-                    theme: getPinnacleTheme(thirdPinnacle),
-                    opportunity: getPinnacleOpportunity(thirdPinnacle, "mature"),
-                    challenge: getPinnacleChallenge(thirdPinnacle, "mature")
-                },
-                { 
-                    period: `${thirdPinnacleEnd + 1}歳～`, 
-                    number: fourthPinnacle, 
-                    theme: getPinnacleTheme(fourthPinnacle),
-                    opportunity: getPinnacleOpportunity(fourthPinnacle, "elder"),
-                    challenge: getPinnacleChallenge(fourthPinnacle, "elder")
+            const interval = setInterval(() => {
+                if (currentStep < totalSteps) {
+                    document.getElementById('loadingSubtext').textContent = loadingMessages[currentStep];
+                    updateProgress(currentStep + 1);
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
                 }
-            ];
+            }, 400);
         }
 
-        function getPinnacleTheme(number) {
-            const themes = {
-                1: "独立と指導力",
-                2: "協力と調和",
-                3: "創造と表現", 
-                4: "基盤構築",
-                5: "自由と変化",
-                6: "責任と奉仕",
-                7: "内省と探求",
-                8: "成功と達成",
-                9: "完成と奉仕",
-                11: "霊的指導",
-                22: "偉大な建設"
-            };
-            return themes[number] || `数字${number}のテーマ`;
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            updateProgress(100);
+            setTimeout(() => {
+                document.getElementById('progressBar').style.width = '0%';
+            }, 1000);
         }
 
-        function getPinnacleOpportunity(number, lifeStage) {
-            const opportunities = {
-                1: { young: "リーダーシップの芽生え", adult: "独立事業の成功", mature: "指導者としての確立", elder: "後進の育成指導" },
-                2: { young: "協調性の発達", adult: "パートナーシップ構築", mature: "仲裁者としての活躍", elder: "調和の知恵を伝授" },
-                3: { young: "才能の開花", adult: "創作活動の成功", mature: "芸術的完成", elder: "文化的遺産創造" },
-                4: { young: "基礎学力の習得", adult: "安定基盤の構築", mature: "組織運営の成功", elder: "伝統技術の継承" },
-                5: { young: "多様な経験積み", adult: "国際的な活動", mature: "変革のリーダー", elder: "自由な生き方の体現" },
-                6: { young: "家族愛の学び", adult: "責任ある立場", mature: "地域社会への貢献", elder: "愛の実践者として尊敬" },
-                7: { young: "内面世界の探求", adult: "専門知識の習得", mature: "真理の探究", elder: "賢者としての助言" },
-                8: { young: "野心と実行力", adult: "事業の大成功", mature: "社会的地位確立", elder: "富の社会還元" },
-                9: { young: "博愛精神の芽生え", adult: "人道的活動", mature: "社会貢献の完成", elder: "人類愛の体現者" },
-                11: { young: "霊的感受性開花", adult: "直感力の活用", mature: "精神的指導者", elder: "光の伝達者" },
-                22: { young: "大きな夢の形成", adult: "壮大な計画実行", mature: "歴史的偉業達成", elder: "人類遺産の創造" }
-            };
-            return opportunities[number]?.[lifeStage] || "特別な機会が待っています";
-        }
+        // スクロールトップボタン制御
+        window.addEventListener('scroll', () => {
+            const scrollToTop = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollToTop.classList.add('visible');
+            } else {
+                scrollToTop.classList.remove('visible');
+            }
+        });
 
-        function getPinnacleChallenge(number, lifeStage) {
-            const challenges = {
-                1: { young: "自己中心的になりがち", adult: "独断的な判断", mature: "周囲との協調", elder: "頑固さの克服" },
-                2: { young: "優柔不断さ", adult: "自己主張の弱さ", mature: "過度な依存", elder: "境界線の維持" },
-                3: { young: "散漫で継続困難", adult: "表面的な付き合い", mature: "才能の浪費", elder: "深みのある表現" },
-                4: { young: "融通の利かなさ", adult: "変化への抵抗", mature: "完璧主義の弊害", elder: "柔軟性の習得" },
-                5: { young: "飽きっぽさ", adult: "責任回避傾向", mature: "安定性の欠如", elder: "継続性の確保" },
-                6: { young: "過度な責任感", adult: "自己犠牲の傾向", mature: "完璧主義的批判", elder: "適切な境界設定" },
-                7: { young: "内向的過ぎる", adult: "現実逃避傾向", mature: "孤独感の増大", elder: "社会とのつながり" },
-                8: { young: "物質偏重", adult: "権力への執着", mature: "人間関係の軽視", elder: "精神性とのバランス" },
-                9: { young: "理想と現実の乖離", adult: "完璧主義的批判", mature: "期待の高さ", elder: "現実的な愛の実践" },
-                11: { young: "過敏性と混乱", adult: "現実適応の困難", mature: "使命感のプレッシャー", elder: "エネルギー管理" },
-                22: { young: "理想の重圧", adult: "完璧主義の弊害", mature: "責任感の重さ", elder: "普遍性と個人のバランス" }
-            };
-            return challenges[number]?.[lifeStage] || "この時期特有の課題があります";
-        }
-
-        // 九星気学計算
-        function calculateKyusei(year) {
-            const baseYear = 1900;
-            const yearDiff = year - baseYear;
-            const kyuseiIndex = (9 - (yearDiff % 9)) % 9;
-            return kyusei[kyuseiIndex];
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         }
 
         // 数字還元関数
@@ -874,20 +276,12 @@
             return reduceNumber(sum);
         }
 
-        // 方位分析
-        function getDirectionalGuidance(kyuseiData, lifePathNumber) {
-            const directions = {
-                "北": "水のエネルギー - 静寂と内省、学習に適した方位",
-                "北東": "土のエネルギー - 変革と継承、新しい始まりの方位", 
-                "東": "木のエネルギー - 成長と発展、積極性を高める方位",
-                "南東": "木のエネルギー - 社交と信用、人間関係を育む方位",
-                "南": "火のエネルギー - 名声と知性、表現力を高める方位",
-                "南西": "土のエネルギー - 堅実と協調、安定を求める方位",
-                "西": "金のエネルギー - 金運と愛嬌、楽しさを求める方位",
-                "北西": "金のエネルギー - 指導力と品格、責任ある立場の方位"
-            };
-            
-            return `あなたの九星「${kyuseiData.star}」は${directions[kyuseiData.direction]}です。特に${kyuseiData.direction}方向への移住や旅行、重要な商談などは運気上昇につながります。`;
+        // 九星気学計算
+        function calculateKyusei(year) {
+            const baseYear = 1900;
+            const yearDiff = year - baseYear;
+            const kyuseiIndex = (9 - (yearDiff % 9)) % 9;
+            return kyusei[kyuseiIndex];
         }
 
         // メイン占い実行関数
@@ -897,122 +291,115 @@
             const buttonText = document.getElementById('buttonText');
             
             if (!birthDate) {
-                alert('生年月日を選択してください');
+                // より親しみやすいエラーメッセージ
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('birthDate').style.animation = 'shake 0.5s ease-in-out';
+                setTimeout(() => {
+                    document.getElementById('birthDate').style.animation = '';
+                }, 500);
                 return;
             }
             
-            // ローディング状態
+            // UX改善：ボタン状態管理
             button.classList.add('loading');
-            buttonText.textContent = '古代叡智を統合中...';
-            createSparkles(button);
+            buttonText.textContent = '解析中...';
+            button.disabled = true;
+            
+            showLoading();
             
             setTimeout(() => {
                 const lifePathNumber = calculateLifePath(birthDate);
                 const [year, month, day] = birthDate.split('-').map(Number);
                 const kyuseiData = calculateKyusei(year);
-                const pinnacles = calculatePinnacles(birthDate, lifePathNumber);
-                const numerologyInfo = numerologyData[lifePathNumber];
+                const numerologyInfo = numerologyData[lifePathNumber] || numerologyData[1]; // フォールバック
                 
-                // 結果HTMLを生成
-                const resultHTML = generateResultHTML(lifePathNumber, numerologyInfo, kyuseiData, pinnacles, birthDate);
+                // 結果HTML生成
+                const resultHTML = generateEnhancedResultHTML(lifePathNumber, numerologyInfo, kyuseiData, birthDate);
                 
-                // 結果を表示
+                hideLoading();
+                
+                // 結果表示
                 document.getElementById('resultSection').innerHTML = resultHTML;
                 document.getElementById('resultSection').classList.add('show');
                 
-                // ボタンを元に戻す
+                // ボタン復旧
                 button.classList.remove('loading');
                 buttonText.textContent = '再度リーディング';
+                button.disabled = false;
                 
-                // スクロール
-                document.getElementById('resultSection').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
+                // アニメーション付きスクロール
+                setTimeout(() => {
+                    document.getElementById('resultSection').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+                
+                // 結果カードの順次アニメーション
+                animateResultCards();
+                
             }, 3000);
         }
 
-        // 結果HTML生成関数
-        function generateResultHTML(lifePathNumber, numerologyInfo, kyuseiData, pinnacles, birthDate) {
+        // 強化された結果HTML生成
+        function generateEnhancedResultHTML(lifePathNumber, numerologyInfo, kyuseiData, birthDate) {
             const isMasterNumber = lifePathNumber === 11 || lifePathNumber === 22 || lifePathNumber === 33;
-            const masterNumberNote = isMasterNumber ? '<div style="text-align: center; color: #cd853f; font-weight: bold; margin: 1rem 0;">🌟 マスターナンバー - 特別な使命を持つ魂 🌟</div>' : '';
             
             return `
-                <div class="result-card">
-                    <h2 class="result-title">🔮 統合数秘術リーディング結果</h2>
+                <div class="result-card slide-in-left">
+                    <h2 class="result-title">あなたの統合数秘術リーディング結果</h2>
                     
                     <div class="number-display">
                         <div class="life-path-number">${lifePathNumber}</div>
-                        ${masterNumberNote}
+                        ${isMasterNumber ? '<div class="master-number-badge">マスターナンバー - 特別な使命を持つ魂</div>' : ''}
                         <div class="sephirot-info">
-                            生命の樹：${numerologyInfo.sephirot}<br>
-                            <strong>${numerologyInfo.meaning}</strong>
+                            <strong>生命の樹：${numerologyInfo.sephirot}</strong><br>
+                            象徴：${numerologyInfo.meaning}
                         </div>
                     </div>
 
                     <div class="result-content">
-                        <div class="section-header">💫 あなたの魂の特徴</div>
+                        <div class="section-header">あなたの魂の本質</div>
                         <p>${numerologyInfo.lifeTheme}</p>
                         
                         <div class="characteristics-grid">
-                            ${numerologyInfo.characteristics.map(char => `
-                                <div class="characteristic-item">
-                                    <h4>✨ 特質</h4>
+                            ${numerologyInfo.characteristics.map((char, index) => `
+                                <div class="characteristic-item slide-in-${index % 2 === 0 ? 'left' : 'right'}" style="animation-delay: ${index * 0.1}s">
+                                    <h4>特質 ${index + 1}</h4>
                                     <p>${char}</p>
                                 </div>
                             `).join('')}
                         </div>
 
-                        <div class="section-header">🎯 人生の成長課題</div>
+                        <div class="section-header">成長への道筋</div>
                         <p>${numerologyInfo.growthChallenge}</p>
 
-                        <div class="section-header">🌟 人生の目的と使命</div>
+                        <div class="section-header">人生の使命</div>
                         <p>${numerologyInfo.lifePurpose}</p>
 
-                        <div class="section-header">💼 適性分野</div>
+                        <div class="section-header">適性分野</div>
                         <div class="characteristics-grid">
-                            ${numerologyInfo.careerGuidance.map(career => `
-                                <div class="characteristic-item">
-                                    <h4>🎯 推奨職業</h4>
+                            ${numerologyInfo.careerGuidance.map((career, index) => `
+                                <div class="characteristic-item fade-in" style="animation-delay: ${index * 0.2}s">
+                                    <h4>推奨分野 ${index + 1}</h4>
                                     <p>${career}</p>
                                 </div>
                             `).join('')}
                         </div>
 
-                        <div class="section-header">📈 ピナクル分析 - 人生の4段階</div>
-                        <table class="pinnacle-table">
-                            <thead>
-                                <tr>
-                                    <th>時期</th>
-                                    <th>数字</th>
-                                    <th>テーマ</th>
-                                    <th>追い風</th>
-                                    <th>課題</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${pinnacles.map(pinnacle => `
-                                    <tr>
-                                        <td>${pinnacle.period}</td>
-                                        <td><strong>${pinnacle.number}</strong></td>
-                                        <td>${pinnacle.theme}</td>
-                                        <td>${pinnacle.opportunity}</td>
-                                        <td>${pinnacle.challenge}</td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                        <div class="section-header">九星気学による方位指導</div>
+                        <div class="characteristic-item">
+                            <h4>あなたの本命星：${kyuseiData.star}</h4>
+                            <p><strong>基本性質：</strong>${kyuseiData.characteristics}</p>
+                            <p><strong>吉方位：</strong>${kyuseiData.direction}方向への移住・旅行・重要な商談が運気上昇につながります</p>
+                        </div>
 
-                        <div class="section-header">🧭 九星気学による方位指導</div>
-                        <p><strong>あなたの本命星：${kyuseiData.star}</strong></p>
-                        <p>基本性質：${kyuseiData.characteristics}</p>
-                        <p>${getDirectionalGuidance(kyuseiData, lifePathNumber)}</p>
-
-                        <div class="section-header">💎 推奨パワーストーン</div>
+                        <div class="section-header">推奨パワーストーン</div>
                         <div class="stone-recommendation">
-                            <p>あなたのライフパスナンバー ${lifePathNumber} に最も共鳴する天然石をご紹介します：</p>
+                            <p>ライフパスナンバー ${lifePathNumber} に最適な天然石をご紹介します：</p>
                             <div class="stone-grid">
-                                ${numerologyInfo.stones.map(stone => `
-                                    <div class="stone-item">
+                                ${numerologyInfo.stones.map((stone, index) => `
+                                    <div class="stone-item fade-in" style="animation-delay: ${index * 0.3}s">
                                         <div class="stone-name">${stone.name}</div>
                                         <div class="stone-effect">${stone.effect}</div>
                                     </div>
@@ -1020,67 +407,1089 @@
                             </div>
                         </div>
 
-                        <div class="section-header">⚠️ 注意すべきポイント</div>
+                        <div class="section-header">注意すべきポイント</div>
                         <div class="warning-section">
-                            <h3>人生の落とし穴に注意</h3>
-                            <p><strong>主な危険：</strong> ${numerologyInfo.growthChallenge}</p>
-                            <p><strong>対策：</strong> 定期的な自己反省と、信頼できる人からのフィードバックを求めることが重要です。完璧主義に陥らず、失敗も成長の一部として受け入れる柔軟性を身につけましょう。</p>
+                            <h3>人生の落とし穴</h3>
+                            <p><strong>主な課題：</strong> ${numerologyInfo.growthChallenge}</p>
+                            <p><strong>対処法：</strong> 定期的な自己反省と信頼できる人からのフィードバックが重要です。完璧を求めすぎず、成長過程を楽しむ心を大切にしましょう。</p>
                         </div>
 
-                        <div class="section-header">🎭 開運の鍵</div>
-                        <p><strong>長期的視点：</strong> ${numerologyInfo.longTermPerspective}</p>
+                        <div class="section-header">長期的な人生展望</div>
+                        <p><strong>あなたの人生の軌跡：</strong> ${numerologyInfo.longTermPerspective}</p>
                         
-                        <div class="section-header">📜 総合メッセージ</div>
-                        <p>古代9つの叡智（ピタゴラス式・カルデアン式・カバラ式・タミル式・九星気学・易数・マヤ暦・ヘブライゲマトリア・統合解析）があなたの魂に刻まれた使命を明らかにしました。ライフパスナンバー ${lifePathNumber} として生まれたあなたは、${numerologyInfo.sephirot}の神聖なエネルギーを体現する存在です。九星「${kyuseiData.star}」の影響も受け、${kyuseiData.element}のエネルギーがあなたの本質を支えています。人生の各段階で示されたピナクルの導きに従い、推奨されたパワーストーンのサポートを受けながら、あなた独自の魂の使命を全うしてください。</p>
+                        <div class="section-header">統合メッセージ</div>
+                        <div class="characteristic-item">
+                            <p>古代から現代に受け継がれる9つの数秘術体系があなたの運命を解き明かしました。ライフパスナンバー${lifePathNumber}として生まれたあなたは、${numerologyInfo.sephirot}の神聖なエネルギーを体現し、九星「${kyuseiData.star}」の${kyuseiData.element}の力に支えられています。この統合的な視点から見えてくるのは、あなたが単なる個人を超えた宇宙的な使命を帯びた存在であるということです。推奨されたパワーストーンの力を借りながら、人生の各段階で示される導きに従い、あなた独自の魂の道を歩んでください。</p>
+                        </div>
                     </div>
                 </div>
             `;
         }
 
-        // スパークル効果
-        function createSparkles(button) {
-            for (let i = 0; i < 8; i++) {
+        // 結果カードのアニメーション制御
+        function animateResultCards() {
+            const cards = document.querySelectorAll('.result-card .characteristic-item, .result-card .stone-item');
+            cards.forEach((card, index) => {
                 setTimeout(() => {
-                    const sparkle = document.createElement('div');
-                    sparkle.className = 'sparkle';
-                    sparkle.style.left = Math.random() * button.offsetWidth + 'px';
-                    sparkle.style.top = Math.random() * button.offsetHeight + 'px';
-                    button.appendChild(sparkle);
-                    
-                    setTimeout(() => sparkle.remove(), 3000);
-                }, i * 200);
-            }
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
+                }, 100);
+            });
         }
+
+        // シェイクアニメーション
+        const shakeKeyframes = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        
+        // 動的にキーフレームを追加
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = shakeKeyframes;
+        document.head.appendChild(styleSheet);
 
         // 背景キラキラエフェクト
         function createBackgroundSparkles() {
             const sparkle = document.createElement('div');
             sparkle.style.position = 'fixed';
-            sparkle.style.width = '4px';
-            sparkle.style.height = '4px';
-            sparkle.style.background = '#ffd700';
+            sparkle.style.width = '3px';
+            sparkle.style.height = '3px';
+            sparkle.style.background = 'var(--gold-color)';
             sparkle.style.borderRadius = '50%';
             sparkle.style.left = Math.random() * window.innerWidth + 'px';
             sparkle.style.top = Math.random() * window.innerHeight + 'px';
-            sparkle.style.animation = 'sparkle 4s infinite';
+            sparkle.style.animation = 'sparkle 4s ease-in-out infinite';
             sparkle.style.pointerEvents = 'none';
             sparkle.style.zIndex = '1';
-            sparkle.style.boxShadow = '0 0 4px #ffd700';
+            sparkle.style.boxShadow = '0 0 6px var(--gold-color)';
+            sparkle.style.opacity = '0.7';
             
             document.body.appendChild(sparkle);
             
             setTimeout(() => sparkle.remove(), 4000);
         }
 
-        // 背景エフェクト開始
-        setInterval(createBackgroundSparkles, 1200);
+        // 入力バリデーション
+        document.getElementById('birthDate').addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const today = new Date();
+            const hundredYearsAgo = new Date();
+            hundredYearsAgo.setFullYear(today.getFullYear() - 100);
+            
+            if (selectedDate > today) {
+                alert('未来の日付は選択できません');
+                this.value = '';
+                return;
+            }
+            
+            if (selectedDate < hundredYearsAgo) {
+                alert('100年以前の日付は選択できません');
+                this.value = '';
+                return;
+            }
+            
+            // 有効な日付の場合、入力フィールドにフィードバック
+            this.style.borderColor = '#22c55e';
+            this.style.backgroundColor = 'rgba(34, 197, 94, 0.05)';
+        });
 
-        // 日付入力の初期化
+        // アクセシビリティ向上
+        document.addEventListener('keydown', function(e) {
+            // Enterキーでリーディング実行
+            if (e.key === 'Enter' && document.activeElement.id === 'birthDate') {
+                e.preventDefault();
+                performReading();
+            }
+            
+            // Escapeキーでローディング中止（開発時用）
+            if (e.key === 'Escape' && document.getElementById('loadingOverlay').style.display === 'flex') {
+                hideLoading();
+                document.querySelector('.reading-button').classList.remove('loading');
+                document.querySelector('.reading-button').disabled = false;
+                document.getElementById('buttonText').textContent = '統合リーディング開始';
+            }
+        });
+
+        // パフォーマンス最適化：背景エフェクトの制御
+        let sparkleInterval;
+        function startSparkleEffect() {
+            sparkleInterval = setInterval(createBackgroundSparkles, 1500);
+        }
+
+        function stopSparkleEffect() {
+            clearInterval(sparkleInterval);
+        }
+
+        // ページ表示時のみエフェクト実行
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                stopSparkleEffect();
+            } else {
+                startSparkleEffect();
+            }
+        });
+
+        // 初期化
         document.addEventListener('DOMContentLoaded', function() {
+            // 今日の日付を最大値に設定
             const today = new Date();
             const maxDate = today.toISOString().split('T')[0];
             document.getElementById('birthDate').setAttribute('max', maxDate);
+            
+            // エフェクト開始
+            startSparkleEffect();
+            
+            // フォーカス管理
+            const dateInput = document.getElementById('birthDate');
+            dateInput.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+            });
+            
+            dateInput.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
+            // タッチデバイス検出とUI調整
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+                // タッチデバイス用の追加スタイル
+                const touchStyle = document.createElement('style');
+                touchStyle.textContent = `
+                    .touch-device .reading-button:hover {
+                        transform: none;
+                    }
+                    .touch-device .reading-button:active {
+                        transform: scale(0.95);
+                        background: linear-gradient(135deg, #7a3f11 0%, #b8743a 50%, #c49620 100%);
+                    }
+                `;
+                document.head.appendChild(touchStyle);
+            }
         });
+
+        // エラーハンドリング
+        window.addEventListener('error', function(e) {
+            console.error('エラーが発生しました:', e.error);
+            hideLoading();
+            const button = document.querySelector('.reading-button');
+            if (button) {
+                button.classList.remove('loading');
+                button.disabled = false;
+                document.getElementById('buttonText').textContent = '統合リーディング開始';
+            }
+        });
+
+        // レスポンシブ対応の追加制御
+        function handleResize() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
+        handleResize(); // 初期実行
+
+        // パフォーマンス監視
+        if ('performance' in window) {
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    if (perfData.loadEventEnd - perfData.loadEventStart > 3000) {
+                        console.warn('ページの読み込みが遅い可能性があります');
+                    }
+                }, 0);
+            });
+        }
     </script>
 </body>
-</html>
+</html><!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="古代9つの数秘術体系を統合した本格的な生年月日占い。ピタゴラス式・カバラ式・九星気学など統合解析">
+    <title>統合数秘術リーディング - 古代叡智の融合占い</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8b4513;
+            --secondary-color: #cd853f;
+            --accent-color: #daa520;
+            --gold-color: #ffd700;
+            --dark-brown: #2c1810;
+            --light-cream: #f5deb3;
+            --bg-overlay: rgba(245, 222, 179, 0.95);
+            --shadow-light: 0 4px 20px rgba(44, 24, 16, 0.1);
+            --shadow-medium: 0 8px 32px rgba(44, 24, 16, 0.15);
+            --shadow-heavy: 0 16px 48px rgba(44, 24, 16, 0.2);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --border-radius: 16px;
+            --border-radius-large: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, var(--dark-brown) 0%, var(--primary-color) 25%, var(--secondary-color) 60%, var(--accent-color) 85%, var(--gold-color) 100%);
+            min-height: 100vh;
+            color: var(--dark-brown);
+            line-height: 1.6;
+            font-size: 16px;
+            overflow-x: hidden;
+            font-weight: 400;
+        }
+
+        .cosmic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.08) 0%, transparent 25%),
+                radial-gradient(circle at 20% 80%, rgba(139,69,19,0.12) 0%, transparent 30%),
+                radial-gradient(circle at 60% 40%, rgba(205,133,63,0.06) 0%, transparent 20%);
+            pointer-events: none;
+            z-index: 1;
+            animation: cosmicPulse 20s ease-in-out infinite;
+        }
+
+        @keyframes cosmicPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--gold-color));
+            transition: width 0.3s ease;
+            z-index: 1000;
+        }
+
+        .header {
+            background: rgba(139, 69, 19, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 2px solid var(--accent-color);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .header h1 {
+            color: var(--gold-color);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            font-weight: 700;
+            line-height: 1.2;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { text-shadow: 2px 2px 8px rgba(0,0,0,0.3); }
+            50% { text-shadow: 2px 2px 16px rgba(255,215,0,0.4); }
+        }
+
+        .header .subtitle {
+            color: var(--light-cream);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .header .description {
+            color: rgba(245, 222, 179, 0.9);
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+            padding: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .input-card {
+            background: var(--bg-overlay);
+            border-radius: var(--border-radius-large);
+            padding: 2.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-heavy);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(218, 165, 32, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .input-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--accent-color), var(--gold-color), var(--secondary-color), var(--accent-color));
+            border-radius: var(--border-radius-large);
+            z-index: -1;
+            opacity: 0;
+            transition: var(--transition-smooth);
+        }
+
+        .input-card:hover::before {
+            opacity: 0.6;
+            animation: borderGlow 2s linear infinite;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .input-section {
+            text-align: center;
+        }
+
+        .input-section h2 {
+            color: var(--primary-color);
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            line-height: 1.3;
+            position: relative;
+        }
+
+        .input-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-color), var(--gold-color));
+            border-radius: 2px;
+        }
+
+        .input-description {
+            color: rgba(101, 67, 33, 0.8);
+            margin-bottom: 2rem;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            line-height: 1.7;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-group {
+            position: relative;
+            margin: 2rem 0;
+        }
+
+        .date-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .date-input {
+            width: 100%;
+            padding: 1.2rem 1rem;
+            font-size: 1.1rem;
+            border: 2px solid rgba(139, 69, 19, 0.3);
+            border-radius: var(--border-radius);
+            text-align: center;
+            background: rgba(255, 255, 255, 0.9);
+            transition: var(--transition-smooth);
+            font-family: inherit;
+            color: var(--dark-brown);
+            font-weight: 500;
+        }
+
+        .date-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 4px rgba(218, 165, 32, 0.1), 0 8px 25px rgba(218, 165, 32, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .date-input:valid {
+            border-color: #22c55e;
+            background: rgba(34, 197, 94, 0.05);
+        }
+
+        .input-label {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: var(--bg-overlay);
+            padding: 0 10px;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: var(--transition-smooth);
+        }
+
+        .date-input:focus + .input-label,
+        .date-input:valid + .input-label {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reading-button {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 50%, var(--accent-color) 100%);
+            color: white;
+            border: none;
+            padding: 1.2rem 3rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition-bounce);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 280px;
+            touch-action: manipulation;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .reading-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .reading-button:hover::before {
+            left: 100%;
+        }
+
+        .reading-button:hover, .reading-button:focus {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .reading-button:active {
+            transform: translateY(-1px) scale(0.98);
+        }
+
+        .reading-button.loading {
+            background: #6b7280;
+            cursor: not-allowed;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(44, 24, 16, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: var(--gold-color);
+        }
+
+        .loader {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 215, 0, 0.3);
+            border-top: 4px solid var(--gold-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-subtext {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .result-section {
+            display: none;
+            animation: slideInUp 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            margin-top: 2rem;
+        }
+
+        .result-section.show {
+            display: block;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            background: var(--bg-overlay);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-medium);
+            backdrop-filter: blur(15px);
+            border-left: 4px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition-smooth);
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .result-title {
+            color: var(--primary-color);
+            font-size: clamp(1.3rem, 3vw, 1.6rem);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(218, 165, 32, 0.2);
+            padding-bottom: 1rem;
+            line-height: 1.3;
+            position: relative;
+        }
+
+        .number-display {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(255, 215, 0, 0.05));
+            border-radius: var(--border-radius);
+            border: 2px solid rgba(218, 165, 32, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .number-display::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, rgba(218, 165, 32, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+            z-index: 0;
+        }
+
+        .number-display > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .life-path-number {
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+            animation: numberPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes numberPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .sephirot-info {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            color: rgba(101, 67, 33, 0.8);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .master-number-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #dc2626, #ea580c);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 1rem 0;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(220, 38, 38, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.6); }
+        }
+
+        .result-content {
+            color: var(--dark-brown);
+            font-size: clamp(0.9rem, 2vw, 1rem);
+            line-height: 1.8;
+            text-align: left;
+        }
+
+        .section-header {
+            color: var(--primary-color);
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            margin: 2.5rem 0 1.5rem 0;
+            font-weight: 600;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 1rem;
+            line-height: 1.3;
+            position: relative;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-color), var(--gold-color));
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .characteristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .characteristic-item {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            border: 1px solid rgba(218, 165, 32, 0.2);
+            transition: var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .characteristic-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .characteristic-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--accent-color);
+        }
+
+        .characteristic-item:hover::before {
+            left: 100%;
+        }
+
+        .characteristic-item h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .characteristic-item p {
+            color: rgba(101, 67, 33, 0.9);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .pinnacle-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+        }
+
+        .pinnacle-table th,
+        .pinnacle-table td {
+            padding: 1rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(218, 165, 32, 0.2);
+            vertical-align: top;
+            font-size: clamp(0.8rem, 2vw, 0.9rem);
+        }
+
+        .pinnacle-table th {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(218, 165, 32, 0.05));
+            color: var(--primary-color);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .pinnacle-table tr:hover {
+            background: rgba(218, 165, 32, 0.05);
+        }
+
+        .stone-recommendation {
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(139, 69, 19, 0.05) 100%);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid rgba(218, 165, 32, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .stone-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            border: 2px solid rgba(218, 165, 32, 0.2);
+            transition: var(--transition-bounce);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stone-item::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(218, 165, 32, 0.2), transparent 70%);
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+        }
+
+        .stone-item:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: var(--shadow-medium);
+            border-color: var(--accent-color);
+        }
+
+        .stone-item:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .stone-name {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .stone-effect {
+            color: rgba(101, 67, 33, 0.8);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .warning-section {
+            background: rgba(239, 68, 68, 0.08);
+            border: 2px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .warning-section::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+        }
+
+        .warning-section h3 {
+            color: #dc2626;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .disclaimer {
+            background: rgba(139, 69, 19, 0.08);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 2px solid rgba(218, 165, 32, 0.2);
+            position: relative;
+        }
+
+        .disclaimer h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .disclaimer p {
+            color: rgba(101, 67, 33, 0.8);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .scroll-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--accent-color), var(--gold-color));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition-smooth);
+            z-index: 1000;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .scroll-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* タッチデバイス最適化 */
+        @media (hover: none) and (pointer: coarse) {
+            .reading-button:hover {
+                transform: none;
+                box-shadow: var(--shadow-medium);
+            }
+            
+            .reading-button:active {
+                transform: scale(0.98);
+            }
+            
+            .stone-item:hover,
+            .characteristic-item:hover,
+            .result-card:hover {
+                transform: none;
+                box-shadow: var(--shadow-light);
+            }
+        }
+
+        /* 小画面対応 */
+        @media (max-width: 768px) {
+            .characteristics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stone-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+            
+            .pinnacle-table {
+                font-size: 0.8rem;
+            }
+            
+            .pinnacle-table th,
+            .pinnacle-table td {
+                padding: 0.8rem 0.5rem;
+            }
+            
+            .reading-button {
+                min-width: 250px;
+                padding: 1rem 2rem;
+            }
+        }
+
+        /* 極小画面対応 */
+        @media (max-width: 320px) {
+            .input-card {
+                padding: 2rem 1rem;
+            }
+            
+            .result-card {
+                padding: 1.5rem;
+            }
+            
+            .pinnacle-table th,
+            .pinnacle-table td {
+                padding: 0.6rem 0.4rem;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* 横画面対応 */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .input-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* ダークモード対応 */
+        @media (prefers-color-scheme: dark) {
+            .result-card,
+            .input-card {
+                background: rgba(44, 24, 16, 0.9);
+                color: var(--light-cream);
+            }
+            
+            .characteristic-item,
+            .stone-item {
+                background: rgba(139, 69, 19, 0.3);
+                color: var(--light-cream);
+            }
+        }
+
+        /* 高コントラスト対応

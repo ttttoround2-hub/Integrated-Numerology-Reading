@@ -2,21 +2,25 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="description" content="古代9つの数秘術体系を統合した本格的な生年月日占い。ピタゴラス式・カバラ式・九星気学など統合解析">
     <title>統合数秘術リーディング - 古代叡智の融合占い</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background: linear-gradient(135deg, #2c1810 0%, #8b4513 25%, #cd853f 50%, #daa520 75%, #ffd700 100%);
+            font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Meiryo', sans-serif;
+            background: linear-gradient(180deg, #2c1810 0%, #8b4513 30%, #cd853f 70%, #daa520 100%);
             min-height: 100vh;
             color: #2c1810;
             line-height: 1.6;
+            font-size: 14px;
+            overflow-x: hidden;
         }
 
         .cosmic-overlay {
@@ -26,9 +30,9 @@
             width: 100%;
             height: 100%;
             background: 
-                radial-gradient(circle at 20% 20%, rgba(255,215,0,0.1) 0%, transparent 20%),
-                radial-gradient(circle at 80% 80%, rgba(139,69,19,0.15) 0%, transparent 25%),
-                radial-gradient(circle at 40% 70%, rgba(205,133,63,0.1) 0%, transparent 15%);
+                radial-gradient(circle at 80% 20%, rgba(255,215,0,0.1) 0%, transparent 20%),
+                radial-gradient(circle at 20% 80%, rgba(139,69,19,0.15) 0%, transparent 25%),
+                radial-gradient(circle at 60% 40%, rgba(205,133,63,0.1) 0%, transparent 15%);
             pointer-events: none;
             z-index: 1;
         }
@@ -36,79 +40,80 @@
         .header {
             background: rgba(139, 69, 19, 0.95);
             backdrop-filter: blur(15px);
-            border-bottom: 3px solid #daa520;
-            padding: 2rem 0;
+            border-bottom: 2px solid #daa520;
+            padding: 1.5rem 1rem;
             text-align: center;
             position: relative;
             z-index: 2;
-            box-shadow: 0 4px 20px rgba(44, 24, 16, 0.3);
+            box-shadow: 0 2px 15px rgba(44, 24, 16, 0.3);
         }
 
         .header h1 {
             color: #ffd700;
-            font-size: 2.8rem;
+            font-size: 1.8rem;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
             font-weight: 700;
+            line-height: 1.3;
         }
 
         .header .subtitle {
             color: #deb887;
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
+            font-size: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
         }
 
         .header .description {
             color: #f5deb3;
-            font-size: 1rem;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 1rem;
+            font-size: 0.85rem;
+            line-height: 1.5;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            max-width: 100%;
+            margin: 0;
+            padding: 1rem;
             position: relative;
             z-index: 2;
         }
 
         .input-card {
             background: rgba(245, 222, 179, 0.95);
-            border-radius: 25px;
-            padding: 3rem 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 25px 50px rgba(44, 24, 16, 0.2);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 15px 35px rgba(44, 24, 16, 0.2);
             backdrop-filter: blur(10px);
             border: 2px solid rgba(218, 165, 32, 0.3);
         }
 
         .input-section {
             text-align: center;
-            margin-bottom: 2rem;
         }
 
         .input-section h2 {
             color: #8b4513;
-            font-size: 2rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
             font-weight: 600;
+            line-height: 1.3;
         }
 
         .input-description {
             color: #654321;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
         .date-input {
-            width: 300px;
-            max-width: 100%;
-            padding: 1.2rem;
-            font-size: 1.3rem;
+            width: 100%;
+            max-width: 280px;
+            padding: 1rem;
+            font-size: 1.1rem;
             border: 3px solid #8b4513;
-            border-radius: 15px;
+            border-radius: 12px;
             text-align: center;
             margin: 1rem 0;
             background: rgba(255, 255, 255, 0.9);
@@ -118,7 +123,7 @@
         .date-input:focus {
             outline: none;
             border-color: #daa520;
-            box-shadow: 0 0 25px rgba(218, 165, 32, 0.4);
+            box-shadow: 0 0 20px rgba(218, 165, 32, 0.4);
             transform: scale(1.02);
         }
 
@@ -126,9 +131,9 @@
             background: linear-gradient(135deg, #8b4513 0%, #cd853f 50%, #daa520 100%);
             color: white;
             border: none;
-            padding: 1.2rem 4rem;
-            font-size: 1.3rem;
-            border-radius: 50px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 25px;
             cursor: pointer;
             transition: all 0.4s ease;
             margin-top: 1rem;
@@ -136,16 +141,15 @@
             overflow: hidden;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            width: 100%;
+            max-width: 280px;
+            touch-action: manipulation;
         }
 
-        .reading-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(139, 69, 19, 0.4);
-        }
-
-        .reading-button:active {
-            transform: translateY(-1px);
+        .reading-button:hover, .reading-button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.4);
         }
 
         .reading-button.loading {
@@ -156,7 +160,7 @@
         .result-section {
             display: none;
             animation: fadeInUp 0.8s ease;
-            margin-top: 2rem;
+            margin-top: 1rem;
         }
 
         .result-section.show {
@@ -165,188 +169,192 @@
 
         .result-card {
             background: rgba(245, 222, 179, 0.95);
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin: 2rem 0;
-            box-shadow: 0 20px 40px rgba(44, 24, 16, 0.15);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 10px 25px rgba(44, 24, 16, 0.15);
             backdrop-filter: blur(10px);
-            border-left: 5px solid #daa520;
+            border-left: 4px solid #daa520;
         }
 
         .result-title {
             color: #8b4513;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
             text-align: center;
             font-weight: 600;
             border-bottom: 2px solid rgba(218, 165, 32, 0.3);
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
+            line-height: 1.3;
         }
 
         .number-display {
             text-align: center;
-            margin: 2rem 0;
-            padding: 2rem;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
             background: rgba(218, 165, 32, 0.1);
-            border-radius: 15px;
+            border-radius: 12px;
             border: 2px solid rgba(218, 165, 32, 0.3);
         }
 
         .life-path-number {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
             color: #8b4513;
             margin-bottom: 0.5rem;
         }
 
         .sephirot-info {
-            font-size: 1.2rem;
+            font-size: 1rem;
             color: #654321;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
         }
 
         .result-content {
             color: #2c1810;
-            font-size: 1.1rem;
-            line-height: 1.8;
+            font-size: 0.95rem;
+            line-height: 1.7;
             text-align: left;
         }
 
         .characteristics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
         }
 
         .characteristic-item {
             background: rgba(255, 255, 255, 0.7);
-            border-radius: 10px;
-            padding: 1.5rem;
+            border-radius: 8px;
+            padding: 1rem;
             border: 2px solid rgba(218, 165, 32, 0.2);
         }
 
         .characteristic-item h4 {
             color: #8b4513;
             margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 600;
         }
 
         .characteristic-item p {
             color: #654321;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
         }
 
         .section-header {
             color: #8b4513;
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem 0;
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem 0;
             font-weight: 600;
-            border-left: 4px solid #daa520;
-            padding-left: 1rem;
+            border-left: 3px solid #daa520;
+            padding-left: 0.8rem;
+            line-height: 1.3;
         }
 
         .pinnacle-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 1.5rem 0;
+            margin: 1rem 0;
             background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
+            font-size: 0.85rem;
         }
 
         .pinnacle-table th,
         .pinnacle-table td {
-            padding: 1rem;
+            padding: 0.8rem 0.5rem;
             text-align: left;
             border-bottom: 1px solid rgba(218, 165, 32, 0.3);
+            vertical-align: top;
         }
 
         .pinnacle-table th {
             background: rgba(139, 69, 19, 0.1);
             color: #8b4513;
             font-weight: 600;
+            font-size: 0.8rem;
         }
 
         .stone-recommendation {
             background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(139, 69, 19, 0.05) 100%);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             border: 2px solid rgba(218, 165, 32, 0.3);
         }
 
         .stone-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 1rem;
             margin-top: 1rem;
         }
 
         .stone-item {
             background: rgba(255, 255, 255, 0.8);
-            border-radius: 10px;
-            padding: 1.5rem;
+            border-radius: 8px;
+            padding: 1rem;
             text-align: center;
             border: 2px solid rgba(218, 165, 32, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .stone-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.2);
         }
 
         .stone-name {
             color: #8b4513;
             font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            font-size: 0.95rem;
         }
 
         .stone-effect {
             color: #654321;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            line-height: 1.4;
         }
 
         .warning-section {
             background: rgba(205, 92, 92, 0.1);
             border: 2px solid rgba(205, 92, 92, 0.3);
-            border-radius: 15px;
-            padding: 2rem;
-            margin: 2rem 0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
         }
 
         .warning-section h3 {
             color: #cd5c5c;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
         }
 
         .disclaimer {
             background: rgba(139, 69, 19, 0.1);
-            border-radius: 15px;
-            padding: 2rem;
-            margin-top: 3rem;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 2rem;
             border: 2px solid rgba(218, 165, 32, 0.3);
         }
 
         .disclaimer h3 {
             color: #8b4513;
-            margin-bottom: 1rem;
-            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
         }
 
         .disclaimer p {
             color: #654321;
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -356,8 +364,8 @@
 
         .sparkle {
             position: absolute;
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #ffd700;
             border-radius: 50%;
             animation: sparkle 3s infinite;
@@ -369,29 +377,66 @@
             50% { opacity: 1; transform: scale(1); }
         }
 
-        @media (max-width: 768px) {
+        /* タッチデバイス最適化 */
+        @media (hover: none) and (pointer: coarse) {
+            .reading-button:hover {
+                transform: none;
+                box-shadow: none;
+            }
+            
+            .reading-button:active {
+                transform: scale(0.98);
+                background: linear-gradient(135deg, #7a3f11 0%, #b8743a 50%, #c49620 100%);
+            }
+            
+            .stone-item:hover {
+                transform: none;
+                box-shadow: none;
+            }
+        }
+
+        /* 非常に小さい画面対応 */
+        @media (max-width: 320px) {
             .header h1 {
-                font-size: 2.2rem;
+                font-size: 1.6rem;
             }
             
             .input-card {
-                padding: 2rem 1rem;
+                padding: 1.5rem 1rem;
             }
             
-            .date-input {
-                width: 100%;
-            }
-            
-            .characteristics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stone-grid {
-                grid-template-columns: 1fr;
+            .life-path-number {
+                font-size: 2rem;
             }
             
             .pinnacle-table {
+                font-size: 0.75rem;
+            }
+            
+            .pinnacle-table th,
+            .pinnacle-table td {
+                padding: 0.5rem 0.3rem;
+            }
+        }
+
+        /* 横画面対応 */
+        @media screen and (orientation: landscape) and (max-height: 500px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .header .subtitle {
                 font-size: 0.9rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .header .description {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -403,8 +448,7 @@
         <h1>統合数秘術リーディング</h1>
         <p class="subtitle">古代9つの叡智を融合した生年月日占い</p>
         <p class="description">
-            ピタゴラス式・カルデアン式・カバラ式・タミル式・九星気学・易数・マヤ暦・ヘブライゲマトリアの
-            古代叡智を統合し、あなたの人生の青写真を詳細に読み解きます
+            ピタゴラス式・カルデアン式・カバラ式・タミル式・九星気学・易数・マヤ暦・ヘブライゲマトリアの古代叡智を統合し、あなたの人生の青写真を詳細に読み解きます
         </p>
     </header>
 
@@ -413,8 +457,7 @@
             <div class="input-section">
                 <h2>生年月日から人生の設計図を読み解く</h2>
                 <p class="input-description">
-                    古代から現代まで受け継がれた9つの数秘術体系を統合し、<br>
-                    あなたの魂の使命・才能・人生の各段階を詳細に分析いたします
+                    古代から現代まで受け継がれた9つの数秘術体系を統合し、あなたの魂の使命・才能・人生の各段階を詳細に分析いたします
                 </p>
                 <input type="date" class="date-input" id="birthDate" max="2024-12-31">
                 <br>
@@ -831,6 +874,7 @@
             return reduceNumber(sum);
         }
 
+        // 方位分析
         function getDirectionalGuidance(kyuseiData, lifePathNumber) {
             const directions = {
                 "北": "水のエネルギー - 静寂と内省、学習に適した方位",
@@ -1012,8 +1056,8 @@
         function createBackgroundSparkles() {
             const sparkle = document.createElement('div');
             sparkle.style.position = 'fixed';
-            sparkle.style.width = '6px';
-            sparkle.style.height = '6px';
+            sparkle.style.width = '4px';
+            sparkle.style.height = '4px';
             sparkle.style.background = '#ffd700';
             sparkle.style.borderRadius = '50%';
             sparkle.style.left = Math.random() * window.innerWidth + 'px';
@@ -1021,7 +1065,7 @@
             sparkle.style.animation = 'sparkle 4s infinite';
             sparkle.style.pointerEvents = 'none';
             sparkle.style.zIndex = '1';
-            sparkle.style.boxShadow = '0 0 6px #ffd700';
+            sparkle.style.boxShadow = '0 0 4px #ffd700';
             
             document.body.appendChild(sparkle);
             
@@ -1029,7 +1073,7 @@
         }
 
         // 背景エフェクト開始
-        setInterval(createBackgroundSparkles, 800);
+        setInterval(createBackgroundSparkles, 1200);
 
         // 日付入力の初期化
         document.addEventListener('DOMContentLoaded', function() {

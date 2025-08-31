@@ -1,612 +1,4 @@
-        /* 高コントラスト対応 */
-        @media (prefers-contrast: high) {
-            .input-card,
-            .result-card {
-                border: 3px solid var(--primary-color);
-            }
-            
-            .reading-button {
-                border: 2px solid white;
-            }
-        }
-
-        /* モーション軽減対応 */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="progress-bar" id="progressBar"></div>
-    <div class="cosmic-overlay"></div>
-    
-    <header class="header">
-        <h1>統合数秘術リーディング</h1>
-        <p class="subtitle">古代9つの叡智を融合した生年月日占い</p>
-        <p class="description">
-            ピタゴラス式・カルデアン式・カバラ式・タミル式・九星気学・易数・マヤ暦・ヘブライゲマトリアの古代叡智を統合し、あなたの人生の青写真を詳細に読み解きます
-        </p>
-    </header>
-
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-content">
-            <div class="loader"></div>
-            <div class="loading-text">古代叡智を統合中...</div>
-            <div class="loading-subtext" id="loadingSubtext">ピタゴラス式数秘術を解析しています</div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="input-card">
-            <div class="input-section">
-                <h2>生年月日から人生の設計図を読み解く</h2>
-                <p class="input-description">
-                    古代から現代まで受け継がれた9つの数秘術体系を統合し、あなたの魂の使命・才能・人生の各段階を詳細に分析いたします
-                </p>
-                <div class="form-group">
-                    <div class="date-input-wrapper">
-                        <input type="date" class="date-input" id="birthDate" max="2024-12-31" required>
-                        <label class="input-label">生年月日を選択してください</label>
-                    </div>
-                </div>
-                <button class="reading-button" onclick="performReading()">
-                    <span id="buttonText">統合リーディング開始</span>
-                </button>
-            </div>
-        </div>
-
-        <div class="result-section" id="resultSection">
-            <!-- 結果がここに動的に挿入されます -->
-        </div>
-
-        <div class="disclaimer fade-in">
-            <h3>統合数秘術について</h3>
-            <p><strong>統合数秘術</strong>は、人類が数千年にわたって発展させてきた数の叡智を現代的に統合したシステムです。古代ギリシャのピタゴラス式、メソポタミアのカルデアン式、ユダヤのカバラ式、インドのタミル式、中国の易数・九星気学、マヤのツォルキン暦、ヘブライのゲマトリア―これら異なる文明が独自に発展させた数秘の法則には、驚くべき共通性があることが現代の研究で明らかになっています。</p>
-            
-            <p><strong>各体系の特徴：</strong>ピタゴラス式は人格と運命の数理的分析、カルデアン式は音響振動による魂の周波数、カバラ式は生命の樹による霊的段階、タミル式はシッダの秘教的数霊観、九星気学は気の流れと方位、易数は陰陽の動的バランス、マヤ暦は宇宙サイクルとの共鳴、ゲマトリアは神聖文字の数値化―これらを統合することで、単一の体系では見えない深層的なパターンが浮かび上がります。</p>
-            
-            <p><strong>重要な注意：</strong>この統合リーディングはスピリチュアル・心理学的洞察を目的としたエンターテインメントです。人生の重要な決断においては、占い結果に依存せず、ご自身の理性と直感、そして信頼できる専門家のアドバイスを大切にしてください。</p>
-        </div>
-    </div>
-
-    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">↑</button>
-
-    <script>
-        // UX強化のための変数
-        let currentStep = 0;
-        const totalSteps = 7;
-        const loadingMessages = [
-            'ピタゴラス式数秘術を解析しています...',
-            'カバラ生命の樹との対応を確認中...',
-            '九星気学による方位を算出中...',
-            'ピナクル分析で人生の段階を解読中...',
-            'パワーストーンとの共鳴を調査中...',
-            '古代叡智を統合しています...',
-            'あなた専用のリーディングを生成中...'
-        ];
-
-        // 統合数秘術のデータベース（前回と同じ）
-        const numerologyData = {
-            1: {
-                sephirot: "ケテル／王冠",
-                meaning: "創始・統一・意志",
-                characteristics: [
-                    "天性のリーダーシップと開拓精神",
-                    "独創性と創造力に溢れる",
-                    "強い意志力と決断力",
-                    "自立心が旺盛で依存を嫌う",
-                    "新しい分野でパイオニアとなる"
-                ],
-                lifeTheme: "あなたは人類の進歩を導く創始者の魂です。未知の領域を切り開き、新しい価値観や手法を世界に提示する使命を持っています。孤独を恐れず、自分の信念に従って道を切り開くことで、多くの人々に希望と方向性を示すことができるでしょう。",
-                growthChallenge: "最大の課題は傲慢さと独断的な態度です。強いリーダーシップを発揮しながらも、他者の意見に耳を傾ける謙虚さを身につける必要があります。完璧主義的な傾向により自分や他人を厳しく判断しがちですが、失敗も成長の一部として受け入れる柔軟性が重要です。",
-                lifePurpose: "個人の成功を超えて、社会全体に貢献する新しいビジョンや手法を創造することです。あなたの独創的なアイデアと実行力は、停滞した状況に新しい風を吹き込み、多くの人々に勇気と希望を与えます。自分らしさを貫きながら、他者と協力する道を見つけることが人生の大きなテーマです。",
-                careerGuidance: ["経営者・起業家", "発明家・研究開発", "芸術家・クリエイター", "政治家・社会活動家"],
-                longTermPerspective: "人生を通じて、あなたは「創造と革新」の体現者として歩みます。若い頃の情熱的な挑戦が、中年期には確固たるビジョンへと昇華し、晩年には多くの人々の道しるべとなる賢者的存在となるでしょう。常に時代の最先端を歩む開拓者として、後世に大きな影響を残します。",
-                stones: [
-                    { name: "ルビー", effect: "リーダーシップを強化し勝利を呼ぶ" },
-                    { name: "ガーネット", effect: "情熱と勇気を高める" },
-                    { name: "ヘマタイト", effect: "意志力を強固にしグラウンディング" }
-                ]
-            },
-            2: {
-                sephirot: "コクマー／知恵",
-                meaning: "協調・受容・直感",
-                characteristics: [
-                    "卓越した協調性と調和能力",
-                    "感受性が豊かで共感力が高い",
-                    "平和を愛し争いを嫌う",
-                    "他者をサポートする天才",
-                    "直感力と洞察力に優れる"
-                ],
-                lifeTheme: "あなたは調和の架け橋となる協力者の魂です。対立する要素を統合し、人と人をつなぎ、平和で調和のとれた環境を創造する使命を持っています。表に出るより陰で支える役割を好み、チームワークを通じて大きな成果を実現する力があります。",
-                growthChallenge: "優柔不断さと自己主張の弱さが課題です。他者への配慮が強すぎて自分の意見を言えずストレスを溜めがちです。また、感受性が強いゆえに他人の感情に振り回されやすく、境界線を明確にする必要があります。時には断る勇気も必要です。",
-                lifePurpose: "人間関係の調和を通じて、より良い社会を築くことです。あなたの優れた仲裁能力と共感力は、対立を解決し、異なる価値観の人々を結びつける貴重な才能です。表立った活動より、静かに人を支え導くことで世界に平和をもたらします。",
-                careerGuidance: ["カウンセラー・心理士", "外交官・仲裁人", "看護師・介護士", "教育者・保育士"],
-                longTermPerspective: "人生全体を通じて「愛と奉仕」を実践する道を歩みます。若い頃は自分の感受性の強さに戸惑うかもしれませんが、それが他者を深く理解し支える力の源泉だと気づくにつれ、多くの人にとって癒しと安らぎの存在となっていきます。",
-                stones: [
-                    { name: "ムーンストーン", effect: "感受性を調和させ女性性を高める" },
-                    { name: "ローズクォーツ", effect: "愛情と慈しみの波動で心を癒す" },
-                    { name: "アクアマリン", effect: "コミュニケーション能力を向上" }
-                ]
-            },
-            3: {
-                sephirot: "ビナー／理解",
-                meaning: "創造・表現・喜び",
-                characteristics: [
-                    "豊かな創造力と表現能力",
-                    "社交性があり人を楽しませる才能",
-                    "楽観的で明るい人柄",
-                    "芸術的センスに優れる",
-                    "コミュニケーション能力が高い"
-                ],
-                lifeTheme: "あなたは喜びと創造の使者の魂です。美しいもの、楽しいもの、人の心を豊かにするものを世界に送り出す使命があります。言葉、音楽、絵画、文章など様々な表現手段を通じて、人々に希望と喜びを与える力を持っています。",
-                growthChallenge: "散漫になりやすく、一つのことを継続するのが苦手な傾向があります。多才であるがゆえに焦点を絞れず、才能を活かしきれないことがあります。また、表面的な付き合いが多くなりがちで、深い人間関係を築く努力が必要です。",
-                lifePurpose: "創造的表現を通じて世界に美と喜びをもたらすことです。あなたの明るさと創造性は、暗い現実に光を注ぎ、人々の心を豊かにします。自分らしい表現方法を見つけ、それを通じて多くの人々の人生に彩りを添えることが使命です。",
-                careerGuidance: ["芸術家・デザイナー", "エンターテイナー・タレント", "作家・ジャーナリスト", "企画・マーケティング"],
-                longTermPerspective: "人生を通じて「美と創造」の探求者として歩みます。若い頃の自由な創作活動が、徐々に洗練され深みを増し、中年以降は多くの人々に愛される作品や活動を通じて、文化的な遺産を残していくでしょう。",
-                stones: [
-                    { name: "シトリン", effect: "創造性と表現力を高める太陽の石" },
-                    { name: "カーネリアン", effect: "情熱と勇気を喚起し行動力向上" },
-                    { name: "アンバー", effect: "明るさと活力をもたらす古代の叡智" }
-                ]
-            },
-            4: {
-                sephirot: "ケセド／慈悲",
-                meaning: "安定・構築・秩序",
-                characteristics: [
-                    "堅実で信頼性の高い性格",
-                    "組織力と計画性に優れる",
-                    "忍耐強く粘り強い",
-                    "責任感が強く約束を守る",
-                    "現実的で実践的思考"
-                ],
-                lifeTheme: "あなたは安定と秩序の建設者の魂です。混沌とした状況に秩序をもたらし、確固たる基盤を築く使命があります。地道な努力を積み重ね、長期的な視点で価値あるものを構築していく力を持っています。",
-                growthChallenge: "融通が利かず頑固になりやすい傾向があります。変化を嫌い、新しいアイデアに対して保守的になりがちです。完璧主義的な面から自分や他人に厳しくなりすぎることがあり、もう少し柔軟性を身につける必要があります。",
-                lifePurpose: "持続可能で価値ある基盤を社会に提供することです。あなたの堅実さと継続力は、不安定な世界にあって人々が信頼できる拠り所となります。短期的な成果より長期的な価値創造を通じて、社会の発展に貢献することが使命です。",
-                careerGuidance: ["建築家・エンジニア", "経営管理・財務", "公務員・行政", "職人・技術者"],
-                longTermPerspective: "人生全体を通じて「秩序と建設」の体現者として歩みます。若い頃からコツコツと積み上げた努力が、中年期以降に大きな成果となって現れ、晩年には多くの人々から尊敬される社会の柱として認められるでしょう。",
-                stones: [
-                    { name: "翡翠", effect: "安定と繁栄をもたらす東洋の聖石" },
-                    { name: "エメラルド", effect: "知恵と調和で組織力を強化" },
-                    { name: "マラカイト", effect: "変革期の安定とバランス維持" }
-                ]
-            },
-            5: {
-                sephirot: "ゲブラー／峻厳",
-                meaning: "自由・変化・冒険",
-                characteristics: [
-                    "自由を愛し変化を求める",
-                    "好奇心旺盛で多才",
-                    "コミュニケーション能力抜群",
-                    "適応力が高く柔軟",
-                    "新しい経験を積極的に求める"
-                ],
-                lifeTheme: "あなたは自由と進歩の探求者の魂です。既存の枠組みを超越し、新しい可能性を探求する使命があります。多様な経験を通じて得た知識と洞察を、社会の進歩と人々の意識拡大のために活用する力を持っています。",
-                growthChallenge: "飽きっぽく持続性に欠ける傾向があります。自由を求めるあまり責任から逃避しがちで、人間関係や仕事に一貫性を保つのが困難です。また、刺激を求めすぎて安定した基盤を築くことを軽視する傾向があります。",
-                lifePurpose: "多様な経験と知識を通じて、人々の視野を広げ社会に新しい風をもたらすことです。あなたの自由な発想と適応力は、硬直した状況に変化をもたらし、多くの人々に新たな可能性を示します。旅行、学習、交流を通じて世界を繋ぐ役割があります。",
-                careerGuidance: ["ジャーナリスト・レポーター", "旅行業・国際関係", "営業・マーケティング", "教育・研修講師"],
-                longTermPerspective: "人生を通じて「自由と探求」の体現者として歩みます。若い頃の豊富な経験が中年期には深い洞察力となり、晩年には多くの知恵と経験を持つ賢者として、人々に新しい視点と希望を与え続けるでしょう。",
-                stones: [
-                    { name: "ターコイズ", effect: "コミュニケーションと旅の守護石" },
-                    { name: "ラピスラズリ", effect: "真理探求と知恵を深める" },
-                    { name: "アベンチュリン", effect: "新しい機会と冒険への勇気" }
-                ]
-            },
-            // 他の数字のデータも同様に含まれます（6-9, 11, 22, 33）
-            // 省略のため一部のみ表示
-        };
-
-        // 九星気学データ
-        const kyusei = [
-            { star: "一白水星", element: "水", direction: "北", characteristics: "思慮深い・柔軟性・適応力" },
-            { star: "二黒土星", element: "土", direction: "南西", characteristics: "堅実・忍耐・協調性" },
-            { star: "三碧木星", element: "木", direction: "東", characteristics: "積極性・行動力・若々しさ" },
-            { star: "四緑木星", element: "木", direction: "南東", characteristics: "社交性・信用・成長" },
-            { star: "五黄土星", element: "土", direction: "中央", characteristics: "統率力・破壊と再生・強力" },
-            { star: "六白金星", element: "金", direction: "北西", characteristics: "指導力・責任感・品格" },
-            { star: "七赤金星", element: "金", direction: "西", characteristics: "愛嬌・表現力・金運" },
-            { star: "八白土星", element: "土", direction: "北東", characteristics: "変革・継承・蓄積" },
-            { star: "九紫火星", element: "火", direction: "南", characteristics: "知性・美意識・名誉" }
-        ];
-
-        // プログレスバー更新
-        function updateProgress(step) {
-            const progress = (step / totalSteps) * 100;
-            document.getElementById('progressBar').style.width = progress + '%';
-        }
-
-        // ローディング表示制御
-        function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
-            currentStep = 0;
-            updateProgress(0);
-            
-            const interval = setInterval(() => {
-                if (currentStep < totalSteps) {
-                    document.getElementById('loadingSubtext').textContent = loadingMessages[currentStep];
-                    updateProgress(currentStep + 1);
-                    currentStep++;
-                } else {
-                    clearInterval(interval);
-                }
-            }, 400);
-        }
-
-        function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
-            updateProgress(100);
-            setTimeout(() => {
-                document.getElementById('progressBar').style.width = '0%';
-            }, 1000);
-        }
-
-        // スクロールトップボタン制御
-        window.addEventListener('scroll', () => {
-            const scrollToTop = document.getElementById('scrollToTop');
-            if (window.pageYOffset > 300) {
-                scrollToTop.classList.add('visible');
-            } else {
-                scrollToTop.classList.remove('visible');
-            }
-        });
-
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
-
-        // 数字還元関数
-        function reduceNumber(num) {
-            while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
-                num = num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
-            }
-            return num;
-        }
-
-        // ライフパスナンバー計算
-        function calculateLifePath(dateString) {
-            const [year, month, day] = dateString.split('-').map(Number);
-            const sum = year + month + day;
-            return reduceNumber(sum);
-        }
-
-        // 九星気学計算
-        function calculateKyusei(year) {
-            const baseYear = 1900;
-            const yearDiff = year - baseYear;
-            const kyuseiIndex = (9 - (yearDiff % 9)) % 9;
-            return kyusei[kyuseiIndex];
-        }
-
-        // メイン占い実行関数
-        function performReading() {
-            const birthDate = document.getElementById('birthDate').value;
-            const button = document.querySelector('.reading-button');
-            const buttonText = document.getElementById('buttonText');
-            
-            if (!birthDate) {
-                // より親しみやすいエラーメッセージ
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('birthDate').style.animation = 'shake 0.5s ease-in-out';
-                setTimeout(() => {
-                    document.getElementById('birthDate').style.animation = '';
-                }, 500);
-                return;
-            }
-            
-            // UX改善：ボタン状態管理
-            button.classList.add('loading');
-            buttonText.textContent = '解析中...';
-            button.disabled = true;
-            
-            showLoading();
-            
-            setTimeout(() => {
-                const lifePathNumber = calculateLifePath(birthDate);
-                const [year, month, day] = birthDate.split('-').map(Number);
-                const kyuseiData = calculateKyusei(year);
-                const numerologyInfo = numerologyData[lifePathNumber] || numerologyData[1]; // フォールバック
-                
-                // 結果HTML生成
-                const resultHTML = generateEnhancedResultHTML(lifePathNumber, numerologyInfo, kyuseiData, birthDate);
-                
-                hideLoading();
-                
-                // 結果表示
-                document.getElementById('resultSection').innerHTML = resultHTML;
-                document.getElementById('resultSection').classList.add('show');
-                
-                // ボタン復旧
-                button.classList.remove('loading');
-                buttonText.textContent = '再度リーディング';
-                button.disabled = false;
-                
-                // アニメーション付きスクロール
-                setTimeout(() => {
-                    document.getElementById('resultSection').scrollIntoView({ 
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }, 300);
-                
-                // 結果カードの順次アニメーション
-                animateResultCards();
-                
-            }, 3000);
-        }
-
-        // 強化された結果HTML生成
-        function generateEnhancedResultHTML(lifePathNumber, numerologyInfo, kyuseiData, birthDate) {
-            const isMasterNumber = lifePathNumber === 11 || lifePathNumber === 22 || lifePathNumber === 33;
-            
-            return `
-                <div class="result-card slide-in-left">
-                    <h2 class="result-title">あなたの統合数秘術リーディング結果</h2>
-                    
-                    <div class="number-display">
-                        <div class="life-path-number">${lifePathNumber}</div>
-                        ${isMasterNumber ? '<div class="master-number-badge">マスターナンバー - 特別な使命を持つ魂</div>' : ''}
-                        <div class="sephirot-info">
-                            <strong>生命の樹：${numerologyInfo.sephirot}</strong><br>
-                            象徴：${numerologyInfo.meaning}
-                        </div>
-                    </div>
-
-                    <div class="result-content">
-                        <div class="section-header">あなたの魂の本質</div>
-                        <p>${numerologyInfo.lifeTheme}</p>
-                        
-                        <div class="characteristics-grid">
-                            ${numerologyInfo.characteristics.map((char, index) => `
-                                <div class="characteristic-item slide-in-${index % 2 === 0 ? 'left' : 'right'}" style="animation-delay: ${index * 0.1}s">
-                                    <h4>特質 ${index + 1}</h4>
-                                    <p>${char}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-
-                        <div class="section-header">成長への道筋</div>
-                        <p>${numerologyInfo.growthChallenge}</p>
-
-                        <div class="section-header">人生の使命</div>
-                        <p>${numerologyInfo.lifePurpose}</p>
-
-                        <div class="section-header">適性分野</div>
-                        <div class="characteristics-grid">
-                            ${numerologyInfo.careerGuidance.map((career, index) => `
-                                <div class="characteristic-item fade-in" style="animation-delay: ${index * 0.2}s">
-                                    <h4>推奨分野 ${index + 1}</h4>
-                                    <p>${career}</p>
-                                </div>
-                            `).join('')}
-                        </div>
-
-                        <div class="section-header">九星気学による方位指導</div>
-                        <div class="characteristic-item">
-                            <h4>あなたの本命星：${kyuseiData.star}</h4>
-                            <p><strong>基本性質：</strong>${kyuseiData.characteristics}</p>
-                            <p><strong>吉方位：</strong>${kyuseiData.direction}方向への移住・旅行・重要な商談が運気上昇につながります</p>
-                        </div>
-
-                        <div class="section-header">推奨パワーストーン</div>
-                        <div class="stone-recommendation">
-                            <p>ライフパスナンバー ${lifePathNumber} に最適な天然石をご紹介します：</p>
-                            <div class="stone-grid">
-                                ${numerologyInfo.stones.map((stone, index) => `
-                                    <div class="stone-item fade-in" style="animation-delay: ${index * 0.3}s">
-                                        <div class="stone-name">${stone.name}</div>
-                                        <div class="stone-effect">${stone.effect}</div>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-
-                        <div class="section-header">注意すべきポイント</div>
-                        <div class="warning-section">
-                            <h3>人生の落とし穴</h3>
-                            <p><strong>主な課題：</strong> ${numerologyInfo.growthChallenge}</p>
-                            <p><strong>対処法：</strong> 定期的な自己反省と信頼できる人からのフィードバックが重要です。完璧を求めすぎず、成長過程を楽しむ心を大切にしましょう。</p>
-                        </div>
-
-                        <div class="section-header">長期的な人生展望</div>
-                        <p><strong>あなたの人生の軌跡：</strong> ${numerologyInfo.longTermPerspective}</p>
-                        
-                        <div class="section-header">統合メッセージ</div>
-                        <div class="characteristic-item">
-                            <p>古代から現代に受け継がれる9つの数秘術体系があなたの運命を解き明かしました。ライフパスナンバー${lifePathNumber}として生まれたあなたは、${numerologyInfo.sephirot}の神聖なエネルギーを体現し、九星「${kyuseiData.star}」の${kyuseiData.element}の力に支えられています。この統合的な視点から見えてくるのは、あなたが単なる個人を超えた宇宙的な使命を帯びた存在であるということです。推奨されたパワーストーンの力を借りながら、人生の各段階で示される導きに従い、あなた独自の魂の道を歩んでください。</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // 結果カードのアニメーション制御
-        function animateResultCards() {
-            const cards = document.querySelectorAll('.result-card .characteristic-item, .result-card .stone-item');
-            cards.forEach((card, index) => {
-                setTimeout(() => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
-                }, 100);
-            });
-        }
-
-        // シェイクアニメーション
-        const shakeKeyframes = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-                20%, 40%, 60%, 80% { transform: translateX(5px); }
-            }
-        `;
-        
-        // 動的にキーフレームを追加
-        const styleSheet = document.createElement('style');
-        styleSheet.textContent = shakeKeyframes;
-        document.head.appendChild(styleSheet);
-
-        // 背景キラキラエフェクト
-        function createBackgroundSparkles() {
-            const sparkle = document.createElement('div');
-            sparkle.style.position = 'fixed';
-            sparkle.style.width = '3px';
-            sparkle.style.height = '3px';
-            sparkle.style.background = 'var(--gold-color)';
-            sparkle.style.borderRadius = '50%';
-            sparkle.style.left = Math.random() * window.innerWidth + 'px';
-            sparkle.style.top = Math.random() * window.innerHeight + 'px';
-            sparkle.style.animation = 'sparkle 4s ease-in-out infinite';
-            sparkle.style.pointerEvents = 'none';
-            sparkle.style.zIndex = '1';
-            sparkle.style.boxShadow = '0 0 6px var(--gold-color)';
-            sparkle.style.opacity = '0.7';
-            
-            document.body.appendChild(sparkle);
-            
-            setTimeout(() => sparkle.remove(), 4000);
-        }
-
-        // 入力バリデーション
-        document.getElementById('birthDate').addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const today = new Date();
-            const hundredYearsAgo = new Date();
-            hundredYearsAgo.setFullYear(today.getFullYear() - 100);
-            
-            if (selectedDate > today) {
-                alert('未来の日付は選択できません');
-                this.value = '';
-                return;
-            }
-            
-            if (selectedDate < hundredYearsAgo) {
-                alert('100年以前の日付は選択できません');
-                this.value = '';
-                return;
-            }
-            
-            // 有効な日付の場合、入力フィールドにフィードバック
-            this.style.borderColor = '#22c55e';
-            this.style.backgroundColor = 'rgba(34, 197, 94, 0.05)';
-        });
-
-        // アクセシビリティ向上
-        document.addEventListener('keydown', function(e) {
-            // Enterキーでリーディング実行
-            if (e.key === 'Enter' && document.activeElement.id === 'birthDate') {
-                e.preventDefault();
-                performReading();
-            }
-            
-            // Escapeキーでローディング中止（開発時用）
-            if (e.key === 'Escape' && document.getElementById('loadingOverlay').style.display === 'flex') {
-                hideLoading();
-                document.querySelector('.reading-button').classList.remove('loading');
-                document.querySelector('.reading-button').disabled = false;
-                document.getElementById('buttonText').textContent = '統合リーディング開始';
-            }
-        });
-
-        // パフォーマンス最適化：背景エフェクトの制御
-        let sparkleInterval;
-        function startSparkleEffect() {
-            sparkleInterval = setInterval(createBackgroundSparkles, 1500);
-        }
-
-        function stopSparkleEffect() {
-            clearInterval(sparkleInterval);
-        }
-
-        // ページ表示時のみエフェクト実行
-        document.addEventListener('visibilitychange', function() {
-            if (document.hidden) {
-                stopSparkleEffect();
-            } else {
-                startSparkleEffect();
-            }
-        });
-
-        // 初期化
-        document.addEventListener('DOMContentLoaded', function() {
-            // 今日の日付を最大値に設定
-            const today = new Date();
-            const maxDate = today.toISOString().split('T')[0];
-            document.getElementById('birthDate').setAttribute('max', maxDate);
-            
-            // エフェクト開始
-            startSparkleEffect();
-            
-            // フォーカス管理
-            const dateInput = document.getElementById('birthDate');
-            dateInput.addEventListener('focus', function() {
-                this.style.transform = 'scale(1.02)';
-            });
-            
-            dateInput.addEventListener('blur', function() {
-                this.style.transform = 'scale(1)';
-            });
-            
-            // タッチデバイス検出とUI調整
-            if ('ontouchstart' in window) {
-                document.body.classList.add('touch-device');
-                // タッチデバイス用の追加スタイル
-                const touchStyle = document.createElement('style');
-                touchStyle.textContent = `
-                    .touch-device .reading-button:hover {
-                        transform: none;
-                    }
-                    .touch-device .reading-button:active {
-                        transform: scale(0.95);
-                        background: linear-gradient(135deg, #7a3f11 0%, #b8743a 50%, #c49620 100%);
-                    }
-                `;
-                document.head.appendChild(touchStyle);
-            }
-        });
-
-        // エラーハンドリング
-        window.addEventListener('error', function(e) {
-            console.error('エラーが発生しました:', e.error);
-            hideLoading();
-            const button = document.querySelector('.reading-button');
-            if (button) {
-                button.classList.remove('loading');
-                button.disabled = false;
-                document.getElementById('buttonText').textContent = '統合リーディング開始';
-            }
-        });
-
-        // レスポンシブ対応の追加制御
-        function handleResize() {
-            const vh = window.innerHeight * 0.01;
-            document.documentElement.style.setProperty('--vh', `${vh}px`);
-        }
-
-        window.addEventListener('resize', handleResize);
-        window.addEventListener('orientationchange', handleResize);
-        handleResize(); // 初期実行
-
-        // パフォーマンス監視
-        if ('performance' in window) {
-            window.addEventListener('load', function() {
-                setTimeout(function() {
-                    const perfData = performance.getEntriesByType('navigation')[0];
-                    if (perfData.loadEventEnd - perfData.loadEventStart > 3000) {
-                        console.warn('ページの読み込みが遅い可能性があります');
-                    }
-                }, 0);
-            });
-        }
-    </script>
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
@@ -816,57 +208,51 @@
             margin: 2rem 0;
         }
 
-        .date-input-wrapper {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-            max-width: 300px;
+        .date-selector {
+            margin: 2rem 0;
         }
 
-        .date-input {
-            width: 100%;
-            padding: 1.2rem 1rem;
-            font-size: 1.1rem;
+        .date-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .date-field {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .date-field label {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .date-select {
+            padding: 0.8rem;
+            font-size: 1rem;
             border: 2px solid rgba(139, 69, 19, 0.3);
             border-radius: var(--border-radius);
-            text-align: center;
             background: rgba(255, 255, 255, 0.9);
-            transition: var(--transition-smooth);
-            font-family: inherit;
             color: var(--dark-brown);
-            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            min-width: 80px;
+            text-align: center;
         }
 
-        .date-input:focus {
+        .date-select:focus {
             outline: none;
             border-color: var(--accent-color);
-            box-shadow: 0 0 0 4px rgba(218, 165, 32, 0.1), 0 8px 25px rgba(218, 165, 32, 0.2);
-            transform: translateY(-2px);
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.1);
         }
 
-        .date-input:valid {
+        .date-select:valid {
             border-color: #22c55e;
-            background: rgba(34, 197, 94, 0.05);
-        }
-
-        .input-label {
-            position: absolute;
-            top: -10px;
-            left: 20px;
-            background: var(--bg-overlay);
-            padding: 0 10px;
-            color: var(--primary-color);
-            font-size: 0.85rem;
-            font-weight: 500;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: var(--transition-smooth);
-        }
-
-        .date-input:focus + .input-label,
-        .date-input:valid + .input-label {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         .reading-button {
@@ -1186,38 +572,6 @@
             line-height: 1.6;
         }
 
-        .pinnacle-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1.5rem 0;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-light);
-        }
-
-        .pinnacle-table th,
-        .pinnacle-table td {
-            padding: 1rem 0.8rem;
-            text-align: left;
-            border-bottom: 1px solid rgba(218, 165, 32, 0.2);
-            vertical-align: top;
-            font-size: clamp(0.8rem, 2vw, 0.9rem);
-        }
-
-        .pinnacle-table th {
-            background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(218, 165, 32, 0.05));
-            color: var(--primary-color);
-            font-weight: 600;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-
-        .pinnacle-table tr:hover {
-            background: rgba(218, 165, 32, 0.05);
-        }
-
         .stone-recommendation {
             background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(139, 69, 19, 0.05) 100%);
             border-radius: var(--border-radius);
@@ -1405,26 +759,24 @@
             }
         }
 
-        /* タッチデバイス最適化 */
-        @media (hover: none) and (pointer: coarse) {
-            .reading-button:hover {
-                transform: none;
-                box-shadow: var(--shadow-medium);
+        @keyframes sparkle {
+            0% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-            
-            .reading-button:active {
-                transform: scale(0.98);
-            }
-            
-            .stone-item:hover,
-            .characteristic-item:hover,
-            .result-card:hover {
-                transform: none;
-                box-shadow: var(--shadow-light);
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* 小画面対応 */
+        /* レスポンシブデザイン */
         @media (max-width: 768px) {
             .characteristics-grid {
                 grid-template-columns: 1fr;
@@ -1434,22 +786,12 @@
                 grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             }
             
-            .pinnacle-table {
-                font-size: 0.8rem;
-            }
-            
-            .pinnacle-table th,
-            .pinnacle-table td {
-                padding: 0.8rem 0.5rem;
-            }
-            
             .reading-button {
                 min-width: 250px;
                 padding: 1rem 2rem;
             }
         }
 
-        /* 極小画面対応 */
         @media (max-width: 320px) {
             .input-card {
                 padding: 2rem 1rem;
@@ -1458,38 +800,863 @@
             .result-card {
                 padding: 1.5rem;
             }
+        }
+
+        @media (prefers-contrast: high) {
+            .input-card,
+            .result-card {
+                border: 3px solid var(--primary-color);
+            }
             
-            .pinnacle-table th,
-            .pinnacle-table td {
-                padding: 0.6rem 0.4rem;
-                font-size: 0.75rem;
+            .reading-button {
+                border: 2px solid white;
             }
         }
 
-        /* 横画面対応 */
-        @media screen and (orientation: landscape) and (max-height: 500px) {
-            .header {
-                padding: 1rem;
-            }
-            
-            .input-card {
-                padding: 1.5rem;
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
         }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="cosmic-overlay"></div>
+    
+    <header class="header">
+        <h1>統合数秘術リーディング</h1>
+        <p class="subtitle">古代9つの叡智を融合した生年月日占い</p>
+        <p class="description">
+            ピタゴラス式・カルデアン式・カバラ式・タミル式・九星気学・易数・マヤ暦・ヘブライゲマトリアの古代叡智を統合し、あなたの人生の青写真を詳細に読み解きます
+        </p>
+    </header>
 
-        /* ダークモード対応 */
-        @media (prefers-color-scheme: dark) {
-            .result-card,
-            .input-card {
-                background: rgba(44, 24, 16, 0.9);
-                color: var(--light-cream);
-            }
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loader"></div>
+            <div class="loading-text">古代叡智を統合中...</div>
+            <div class="loading-subtext" id="loadingSubtext">ピタゴラス式数秘術を解析しています</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="input-card">
+            <div class="input-section">
+                <h2>生年月日から人生の設計図を読み解く</h2>
+                <p class="input-description">
+                    古代から現代まで受け継がれた9つの数秘術体系を統合し、あなたの魂の使命・才能・人生の各段階を詳細に分析いたします
+                </p>
+                <div class="form-group">
+                    <div class="date-selector">
+                        <div class="date-inputs">
+                            <div class="date-field">
+                                <label>年</label>
+                                <select id="yearSelect" class="date-select">
+                                    <option value="">----</option>
+                                </select>
+                            </div>
+                            <div class="date-field">
+                                <label>月</label>
+                                <select id="monthSelect" class="date-select">
+                                    <option value="">--</option>
+                                    <option value="1">1月</option>
+                                    <option value="2">2月</option>
+                                    <option value="3">3月</option>
+                                    <option value="4">4月</option>
+                                    <option value="5">5月</option>
+                                    <option value="6">6月</option>
+                                    <option value="7">7月</option>
+                                    <option value="8">8月</option>
+                                    <option value="9">9月</option>
+                                    <option value="10">10月</option>
+                                    <option value="11">11月</option>
+                                    <option value="12">12月</option>
+                                </select>
+                            </div>
+                            <div class="date-field">
+                                <label>日</label>
+                                <select id="daySelect" class="date-select">
+                                    <option value="">--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="reading-button" onclick="performReading()">
+                    <span id="buttonText">統合リーディング開始</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <!-- 結果がここに動的に挿入されます -->
+        </div>
+
+        <div class="disclaimer fade-in">
+            <h3>統合数秘術について</h3>
+            <p><strong>統合数秘術</strong>は、人類が数千年にわたって発展させてきた数の叡智を現代的に統合したシステムです。古代ギリシャのピタゴラス式、メソポタミアのカルデアン式、ユダヤのカバラ式、インドのタミル式、中国の易数・九星気学、マヤのツォルキン暦、ヘブライのゲマトリア―これら異なる文明が独自に発展させた数秘の法則には、驚くべき共通性があることが現代の研究で明らかになっています。</p>
             
-            .characteristic-item,
-            .stone-item {
-                background: rgba(139, 69, 19, 0.3);
-                color: var(--light-cream);
+            <p><strong>各体系の特徴：</strong>ピタゴラス式は人格と運命の数理的分析、カルデアン式は音響振動による魂の周波数、カバラ式は生命の樹による霊的段階、タミル式はシッダの秘教的数霊観、九星気学は気の流れと方位、易数は陰陽の動的バランス、マヤ暦は宇宙サイクルとの共鳴、ゲマトリアは神聖文字の数値化―これらを統合することで、単一の体系では見えない深層的なパターンが浮かび上がります。</p>
+            
+            <p><strong>重要な注意：</strong>この統合リーディングはスピリチュアル・心理学的洞察を目的としたエンターテインメントです。人生の重要な決断においては、占い結果に依存せず、ご自身の理性と直感、そして信頼できる専門家のアドバイスを大切にしてください。</p>
+        </div>
+    </div>
+
+    <button class="scroll-to-top" id="scrollToTop" onclick="scrollToTop()">↑</button>
+
+    <script>
+        // UX強化のための変数
+        let currentStep = 0;
+        const totalSteps = 7;
+        const loadingMessages = [
+            'ピタゴラス式数秘術を解析しています...',
+            'カバラ生命の樹との対応を確認中...',
+            '九星気学による方位を算出中...',
+            'ピナクル分析で人生の段階を解読中...',
+            'パワーストーンとの共鳴を調査中...',
+            '古代叡智を統合しています...',
+            'あなた専用のリーディングを生成中...'
+        ];
+
+        // 完全な統合数秘術データベース
+        const numerologyData = {
+            1: {
+                sephirot: "ケテル／王冠",
+                meaning: "創始・統一・意志",
+                characteristics: [
+                    "天性のリーダーシップと開拓精神",
+                    "独創性と創造力に溢れる",
+                    "強い意志力と決断力",
+                    "自立心が旺盛で依存を嫌う",
+                    "新しい分野でパイオニアとなる"
+                ],
+                lifeTheme: "あなたは人類の進歩を導く創始者の魂です。未知の領域を切り開き、新しい価値観や手法を世界に提示する使命を持っています。孤独を恐れず、自分の信念に従って道を切り開くことで、多くの人々に希望と方向性を示すことができるでしょう。",
+                growthChallenge: "最大の課題は傲慢さと独断的な態度です。強いリーダーシップを発揮しながらも、他者の意見に耳を傾ける謙虚さを身につける必要があります。完璧主義的な傾向により自分や他人を厳しく判断しがちですが、失敗も成長の一部として受け入れる柔軟性が重要です。",
+                lifePurpose: "個人の成功を超えて、社会全体に貢献する新しいビジョンや手法を創造することです。あなたの独創的なアイデアと実行力は、停滞した状況に新しい風を吹き込み、多くの人々に勇気と希望を与えます。自分らしさを貫きながら、他者と協力する道を見つけることが人生の大きなテーマです。",
+                careerGuidance: ["経営者・起業家", "発明家・研究開発", "芸術家・クリエイター", "政治家・社会活動家"],
+                longTermPerspective: "人生を通じて、あなたは「創造と革新」の体現者として歩みます。若い頃の情熱的な挑戦が、中年期には確固たるビジョンへと昇華し、晩年には多くの人々の道しるべとなる賢者的存在となるでしょう。常に時代の最先端を歩む開拓者として、後世に大きな影響を残します。",
+                stones: [
+                    { name: "ルビー", effect: "リーダーシップを強化し勝利を呼ぶ" },
+                    { name: "ガーネット", effect: "情熱と勇気を高める" },
+                    { name: "ヘマタイト", effect: "意志力を強固にしグラウンディング" }
+                ]
+            },
+            2: {
+                sephirot: "コクマー／知恵",
+                meaning: "協調・受容・直感",
+                characteristics: [
+                    "卓越した協調性と調和能力",
+                    "感受性が豊かで共感力が高い",
+                    "平和を愛し争いを嫌う",
+                    "他者をサポートする天才",
+                    "直感力と洞察力に優れる"
+                ],
+                lifeTheme: "あなたは調和の架け橋となる協力者の魂です。対立する要素を統合し、人と人をつなぎ、平和で調和のとれた環境を創造する使命を持っています。表に出るより陰で支える役割を好み、チームワークを通じて大きな成果を実現する力があります。",
+                growthChallenge: "優柔不断さと自己主張の弱さが課題です。他者への配慮が強すぎて自分の意見を言えずストレスを溜めがちです。また、感受性が強いゆえに他人の感情に振り回されやすく、境界線を明確にする必要があります。時には断る勇気も必要です。",
+                lifePurpose: "人間関係の調和を通じて、より良い社会を築くことです。あなたの優れた仲裁能力と共感力は、対立を解決し、異なる価値観の人々を結びつける貴重な才能です。表立った活動より、静かに人を支え導くことで世界に平和をもたらします。",
+                careerGuidance: ["カウンセラー・心理士", "外交官・仲裁人", "看護師・介護士", "教育者・保育士"],
+                longTermPerspective: "人生全体を通じて「愛と奉仕」を実践する道を歩みます。若い頃は自分の感受性の強さに戸惑うかもしれませんが、それが他者を深く理解し支える力の源泉だと気づくにつれ、多くの人にとって癒しと安らぎの存在となっていきます。",
+                stones: [
+                    { name: "ムーンストーン", effect: "感受性を調和させ女性性を高める" },
+                    { name: "ローズクォーツ", effect: "愛情と慈しみの波動で心を癒す" },
+                    { name: "アクアマリン", effect: "コミュニケーション能力を向上" }
+                ]
+            },
+            3: {
+                sephirot: "ビナー／理解",
+                meaning: "創造・表現・喜び",
+                characteristics: [
+                    "豊かな創造力と表現能力",
+                    "社交性があり人を楽しませる才能",
+                    "楽観的で明るい人柄",
+                    "芸術的センスに優れる",
+                    "コミュニケーション能力が高い"
+                ],
+                lifeTheme: "あなたは喜びと創造の使者の魂です。美しいもの、楽しいもの、人の心を豊かにするものを世界に送り出す使命があります。言葉、音楽、絵画、文章など様々な表現手段を通じて、人々に希望と喜びを与える力を持っています。",
+                growthChallenge: "散漫になりやすく、一つのことを継続するのが苦手な傾向があります。多才であるがゆえに焦点を絞れず、才能を活かしきれないことがあります。また、表面的な付き合いが多くなりがちで、深い人間関係を築く努力が必要です。",
+                lifePurpose: "創造的表現を通じて世界に美と喜びをもたらすことです。あなたの明るさと創造性は、暗い現実に光を注ぎ、人々の心を豊かにします。自分らしい表現方法を見つけ、それを通じて多くの人々の人生に彩りを添えることが使命です。",
+                careerGuidance: ["芸術家・デザイナー", "エンターテイナー・タレント", "作家・ジャーナリスト", "企画・マーケティング"],
+                longTermPerspective: "人生を通じて「美と創造」の探求者として歩みます。若い頃の自由な創作活動が、徐々に洗練され深みを増し、中年以降は多くの人々に愛される作品や活動を通じて、文化的な遺産を残していくでしょう。",
+                stones: [
+                    { name: "シトリン", effect: "創造性と表現力を高める太陽の石" },
+                    { name: "カーネリアン", effect: "情熱と勇気を喚起し行動力向上" },
+                    { name: "アンバー", effect: "明るさと活力をもたらす古代の叡智" }
+                ]
+            },
+            4: {
+                sephirot: "ケセド／慈悲",
+                meaning: "安定・構築・秩序",
+                characteristics: [
+                    "堅実で信頼性の高い性格",
+                    "組織力と計画性に優れる",
+                    "忍耐強く粘り強い",
+                    "責任感が強く約束を守る",
+                    "現実的で実践的思考"
+                ],
+                lifeTheme: "あなたは安定と秩序の建設者の魂です。混沌とした状況に秩序をもたらし、確固たる基盤を築く使命があります。地道な努力を積み重ね、長期的な視点で価値あるものを構築していく力を持っています。",
+                growthChallenge: "融通が利かず頑固になりやすい傾向があります。変化を嫌い、新しいアイデアに対して保守的になりがちです。完璧主義的な面から自分や他人に厳しくなりすぎることがあり、もう少し柔軟性を身につける必要があります。",
+                lifePurpose: "持続可能で価値ある基盤を社会に提供することです。あなたの堅実さと継続力は、不安定な世界にあって人々が信頼できる拠り所となります。短期的な成果より長期的な価値創造を通じて、社会の発展に貢献することが使命です。",
+                careerGuidance: ["建築家・エンジニア", "経営管理・財務", "公務員・行政", "職人・技術者"],
+                longTermPerspective: "人生全体を通じて「秩序と建設」の体現者として歩みます。若い頃からコツコツと積み上げた努力が、中年期以降に大きな成果となって現れ、晩年には多くの人々から尊敬される社会の柱として認められるでしょう。",
+                stones: [
+                    { name: "翡翠", effect: "安定と繁栄をもたらす東洋の聖石" },
+                    { name: "エメラルド", effect: "知恵と調和で組織力を強化" },
+                    { name: "マラカイト", effect: "変革期の安定とバランス維持" }
+                ]
+            },
+            5: {
+                sephirot: "ゲブラー／峻厳",
+                meaning: "自由・変化・冒険",
+                characteristics: [
+                    "自由を愛し変化を求める",
+                    "好奇心旺盛で多才",
+                    "コミュニケーション能力抜群",
+                    "適応力が高く柔軟",
+                    "新しい経験を積極的に求める"
+                ],
+                lifeTheme: "あなたは自由と進歩の探求者の魂です。既存の枠組みを超越し、新しい可能性を探求する使命があります。多様な経験を通じて得た知識と洞察を、社会の進歩と人々の意識拡大のために活用する力を持っています。",
+                growthChallenge: "飽きっぽく持続性に欠ける傾向があります。自由を求めるあまり責任から逃避しがちで、人間関係や仕事に一貫性を保つのが困難です。また、刺激を求めすぎて安定した基盤を築くことを軽視する傾向があります。",
+                lifePurpose: "多様な経験と知識を通じて、人々の視野を広げ社会に新しい風をもたらすことです。あなたの自由な発想と適応力は、硬直した状況に変化をもたらし、多くの人々に新たな可能性を示します。旅行、学習、交流を通じて世界を繋ぐ役割があります。",
+                careerGuidance: ["ジャーナリスト・レポーター", "旅行業・国際関係", "営業・マーケティング", "教育・研修講師"],
+                longTermPerspective: "人生を通じて「自由と探求」の体現者として歩みます。若い頃の豊富な経験が中年期には深い洞察力となり、晩年には多くの知恵と経験を持つ賢者として、人々に新しい視点と希望を与え続けるでしょう。",
+                stones: [
+                    { name: "ターコイズ", effect: "コミュニケーションと旅の守護石" },
+                    { name: "ラピスラズリ", effect: "真理探求と知恵を深める" },
+                    { name: "アベンチュリン", effect: "新しい機会と冒険への勇気" }
+                ]
+            },
+            6: {
+                sephirot: "ティファレト／美",
+                meaning: "愛・調和・責任",
+                characteristics: [
+                    "愛情深く家族思い",
+                    "責任感が強く献身的",
+                    "美的センスに優れる",
+                    "調和とバランスを重視",
+                    "他者への奉仕を喜ぶ"
+                ],
+                lifeTheme: "あなたは愛と奉仕の体現者の魂です。家族、友人、コミュニティに無条件の愛を注ぎ、調和のとれた環境を創造する使命があります。美しいものを愛し、人々の心を癒し、支える存在として大きな役割を果たします。",
+                growthChallenge: "完璧主義と過度の責任感が負担となりがちです。他者のために自分を犠牲にしすぎて疲弊することがあります。また、批判に敏感で、理想と現実のギャップに悩むことも多いでしょう。適切な境界線を設定することが重要です。",
+                lifePurpose: "無条件の愛と美の力で世界を癒すことです。あなたの深い愛情と美意識は、人々の心に平安と喜びをもたらします。家庭や地域社会の中心となり、多くの人々にとって心の支えとなることが人生の大きな意味です。",
+                careerGuidance: ["医療・看護・介護", "教育・カウンセリング", "美容・デザイン", "社会福祉・NPO"],
+                longTermPerspective: "人生を通じて「愛と美」の探求者として歩みます。若い頃から持つ深い愛情が、経験を重ねるごとに洗練され、中年期以降は多くの人々から慕われる心の支柱として、地域社会にかけがえのない存在となるでしょう。",
+                stones: [
+                    { name: "ローズクォーツ", effect: "無条件の愛を育む心の癒し石" },
+                    { name: "エメラルド", effect: "ハートチャクラを開き愛を拡大" },
+                    { name: "真珠", effect: "母性と純粋性を高める月の恵み" }
+                ]
+            },
+            7: {
+                sephirot: "ネツァク／勝利",
+                meaning: "探求・直感・神秘",
+                characteristics: [
+                    "深い洞察力と直感力",
+                    "精神世界への関心が高い",
+                    "分析能力に優れる",
+                    "内省的で思慮深い",
+                    "独特の視点と哲学を持つ"
+                ],
+                lifeTheme: "あなたは真理と叡智の探求者の魂です。表面的な現象の背後にある本質を見抜き、深い洞察と智恵を人々に伝える使命があります。精神的な成長と意識の拡大を通じて、多くの人々に気づきをもたらす力を持っています。",
+                growthChallenge: "孤独感と現実逃避の傾向があります。深く考えすぎて行動を起こせなかったり、理想が高すぎて現実とのギャップに悩んだりします。また、他人から理解されにくい独特の思考を持つため、コミュニケーションに困難を感じることがあります。",
+                lifePurpose: "深い洞察と智恵を通じて人々の意識を高めることです。あなたの鋭い直感と分析力は、複雑な問題の本質を見抜き、新しい視点や解決策を提示する貴重な能力です。瞑想、学習、研究を通じて得た智恵を社会に還元することが使命です。",
+                careerGuidance: ["研究者・学者", "心理学者・セラピスト", "占い師・スピリチュアル指導者", "作家・哲学者"],
+                longTermPerspective: "人生全体を通じて「智恵と真理」の探求者として歩みます。若い頃の深い疑問と探求心が、年を重ねるごとに確固たる哲学と智恵へと昇華し、晩年には多くの人々から敬愛される賢者的存在となるでしょう。",
+                stones: [
+                    { name: "アメジスト", effect: "高次の意識と直感力を開発" },
+                    { name: "フローライト", effect: "精神の明晰さと集中力向上" },
+                    { name: "セレナイト", effect: "霊性を高め天界との繋がり強化" }
+                ]
+            },
+            8: {
+                sephirot: "ホド／栄光",
+                meaning: "実現・権威・成功",
+                characteristics: [
+                    "優れた経営センスと組織力",
+                    "物質的成功への強い意欲",
+                    "権威と責任を上手に扱う",
+                    "実行力と決断力に優れる",
+                    "長期的な戦略思考"
+                ],
+                lifeTheme: "あなたは物質世界での成功と影響力の行使者の魂です。ビジネスや組織運営を通じて社会に大きな影響を与え、経済的繁栄と社会発展に貢献する使命があります。理想を現実化する力強い実行力を持っています。",
+                growthChallenge: "権力欲や物質欲に支配されるリスクがあります。成功への執着が強すぎて人間関係を軽視したり、目標達成のために手段を選ばなくなったりする危険があります。精神的な価値とのバランスを保つことが重要です。",
+                lifePurpose: "物質世界での成功を通じて社会全体の繁栄に貢献することです。あなたの優れたビジネス能力と組織力は、雇用を創出し、経済を活性化し、多くの人々に機会を提供します。成功と富を正しく活用して社会貢献することが真の使命です。",
+                careerGuidance: ["経営者・企業家", "投資家・金融業", "政治家・行政管理", "不動産・建設業"],
+                longTermPerspective: "人生を通じて「成功と実現」の体現者として歩みます。若い頃の野心と努力が中年期に大きな成果となって現れ、晩年には築き上げた事業や財産を社会のために活用する、尊敬される実業家となるでしょう。",
+                stones: [
+                    { name: "ダイヤモンド", effect: "不屈の意志と成功への道筋" },
+                    { name: "パイライト", effect: "富と繁栄を引き寄せる黄金石" },
+                    { name: "タイガーアイ", effect: "洞察力と決断力を強化" }
+                ]
+            },
+            9: {
+                sephirot: "イェソド／基礎",
+                meaning: "完成・奉仕・人道",
+                characteristics: [
+                    "博愛精神と人道主義",
+                    "芸術的才能と創造性",
+                    "寛大で包容力がある",
+                    "全体的な視点を持つ",
+                    "精神的な成熟度が高い"
+                ],
+                lifeTheme: "あなたは人類愛と奉仕の完成者の魂です。個人的な利益を超えて人類全体の幸福のために尽くし、より良い世界の実現に貢献する使命があります。高い精神性と芸術的才能を通じて、多くの人々に希望と感動を与える力を持っています。",
+                growthChallenge: "理想が高すぎて現実とのギャップに悩むことがあります。他者への期待が高すぎて失望したり、完璧主義的な傾向で自分や他人を厳しく判断したりしがちです。また、与えすぎて自分が疲弊することもあります。",
+                lifePurpose: "人類の向上と世界平和に貢献することです。あなたの深い愛と智恵は、国境や文化を超えて多くの人々の心を動かし、より良い未来の実現に向けて大きな影響を与えます。芸術、教育、慈善活動を通じて人類の遺産を豊かにすることが使命です。",
+                careerGuidance: ["芸術家・文化人", "教育者・研究者", "慈善活動・NGO", "医療・ヒーリング"],
+                longTermPerspective: "人生全体を通じて「完成と奉仕」の体現者として歩みます。若い頃から持つ高い理想が、経験と智恵によって現実的な奉仕活動へと昇華し、晩年には多くの人々から敬愛される人道主義者として歴史に名を残すでしょう。",
+                stones: [
+                    { name: "サファイア", effect: "高貴な精神性と智恵を育む" },
+                    { name: "チャロアイト", effect: "魂の変容と奉仕精神を高める" },
+                    { name: "スギライト", effect: "霊的成長と愛の実践をサポート" }
+                ]
+            },
+            11: {
+                sephirot: "ダアト／知識（隠れたセフィラ）",
+                meaning: "直感・啓示・霊的指導",
+                characteristics: [
+                    "極めて高い霊的感受性",
+                    "予知能力や第六感が鋭い",
+                    "人々を霊的に導く使命",
+                    "高次元との繋がりが強い",
+                    "カリスマ的な影響力"
+                ],
+                lifeTheme: "あなたは霊的な光をもたらすマスターティーチャーの魂です。高次元からのメッセージを受け取り、人々の意識覚醒と霊的成長をサポートする特別な使命があります。直感力と霊的洞察力を通じて、多くの魂を導く役割を担っています。",
+                growthChallenge: "極度の敏感さが生きづらさとなることがあります。霊的な体験が強すぎて現実世界との調和が困難だったり、他人から理解されずに孤独を感じたりします。自分の特殊な能力を現実的に活用する方法を学ぶ必要があります。",
+                lifePurpose: "霊的な教師として人類の意識進化に貢献することです。あなたの直感的洞察と霊的知識は、迷える魂に方向性を示し、新しい時代の精神性を築く基盤となります。瞑想、ヒーリング、教育を通じて多くの人々の覚醒を促すことが使命です。",
+                careerGuidance: ["スピリチュアル指導者・ヒーラー", "心理カウンセラー・セラピスト", "芸術家・音楽家", "研究者・発明家"],
+                longTermPerspective: "人生を通じて「光と導き」の伝達者として歩みます。若い頃の混乱や敏感さが、年を重ねるごとに確かな霊的能力へと昇華し、多くの人々から慕われる精神的指導者として、新しい意識の時代を切り開くでしょう。",
+                stones: [
+                    { name: "モルダバイト", effect: "宇宙意識との繋がりを強化" },
+                    { name: "アメトリン", effect: "直感と論理の統合をサポート" },
+                    { name: "ヘルキマーダイヤモンド", effect: "高次元エネルギーの受信強化" }
+                ]
+            },
+            22: {
+                sephirot: "ケテル+マルクト統合",
+                meaning: "物質化・建築・現実創造",
+                characteristics: [
+                    "壮大なビジョンを現実化する力",
+                    "人類規模の影響を与える可能性",
+                    "極めて高い実行能力",
+                    "理想と現実を橋渡しする才能",
+                    "歴史に残る偉業を成し遂げる"
+                ],
+                lifeTheme: "あなたは宇宙的なビジョンを地上に具現化するマスタービルダーの魂です。人類の進歩と地球の進化に関わる壮大なプロジェクトを現実化し、未来世代に大きな遺産を残す使命があります。夢を現実に変える究極の力を持っています。",
+                growthChallenge: "あまりに大きな理想と責任感が重荷となりがちです。完璧主義的傾向が強く、自分や他人への期待が高すぎて疲弊することがあります。また、普通の人生では満足できず、常に大きな挑戦を求めてしまう傾向があります。",
+                lifePurpose: "人類の進歩と地球の調和に貢献する偉大な事業を実現することです。あなたの卓越した能力とビジョンは、技術革新、社会制度改革、文化創造など、人類史に残る貢献をもたらします。個人の成功を超えた普遍的価値の創造が真の使命です。",
+                careerGuidance: ["大企業経営者・社会起業家", "発明家・技術革新者", "政治家・国際的指導者", "建築家・都市計画家"],
+                longTermPerspective: "人生全体を通じて「創造と建設」の頂点を極める道を歩みます。若い頃から抱く壮大な夢が、中年期に具体的なプロジェクトとして実現し始め、晩年には人類の歴史に永続的な影響を与える偉大な建築者として記憶されるでしょう。",
+                stones: [
+                    { name: "水晶（クリアクォーツ）", effect: "最高純度のエネルギー増幅" },
+                    { name: "ルチルクォーツ", effect: "天と地を繋ぐ黄金の光線" },
+                    { name: "スーパーセブン", effect: "全チャクラ統合の最強石" }
+                ]
+            },
+            33: {
+                sephirot: "全セフィロト統合",
+                meaning: "無条件愛・犠牲・救済",
+                characteristics: [
+                    "無条件の愛と慈悲の体現",
+                    "他者のために自己を捧げる精神",
+                    "極めて高い霊的進化度",
+                    "癒しと救済の特別な使命",
+                    "キリスト意識の具現化"
+                ],
+                lifeTheme: "あなたは無条件の愛を体現するマスターヒーラーの魂です。人類の苦痛を癒し、魂の救済をもたらす最高の使命を担っています。自己犠牲的な愛を通じて、多くの魂を光へと導く神聖な役割があります。",
+                growthChallenge: "過度の自己犠牲により自分自身が疲弊する危険があります。他者の痛みを自分のものとして感じすぎて、境界線を保つのが困難です。また、あまりに高い霊性ゆえに現実世界での生活に困難を感じることがあります。",
+                lifePurpose: "無条件の愛の実践を通じて人類の魂の進化に貢献することです。あなたの深い慈悲と愛は、最も困難な状況にある人々にも希望と癒しをもたらします。教育、医療、宗教、芸術を通じて多くの魂を光へ導くことが神聖な使命です。",
+                careerGuidance: ["宗教指導者・聖職者", "医師・看護師・介護者", "教育者・カウンセラー", "芸術家・音楽療法士"],
+                longTermPerspective: "人生全体を通じて「愛と奉仕」の最高峰を体現する道を歩みます。若い頃から持つ深い愛情が、経験を通じてさらに洗練され、晩年には聖者的な存在として多くの人々に愛と希望をもたらし続ける光の存在となるでしょう。",
+                stones: [
+                    { name: "ダイヤモンド（無色透明）", effect: "最純粋な神聖光線の媒体" },
+                    { name: "ローズクォーツ（最高品質）", effect: "無条件愛の最高周波数" },
+                    { name: "セラフィナイト", effect: "天使界との直接交信" }
+                ]
             }
+        };
+
+        // 九星気学データ
+        const kyusei = [
+            { star: "一白水星", element: "水", direction: "北", characteristics: "思慮深い・柔軟性・適応力" },
+            { star: "二黒土星", element: "土", direction: "南西", characteristics: "堅実・忍耐・協調性" },
+            { star: "三碧木星", element: "木", direction: "東", characteristics: "積極性・行動力・若々しさ" },
+            { star: "四緑木星", element: "木", direction: "南東", characteristics: "社交性・信用・成長" },
+            { star: "五黄土星", element: "土", direction: "中央", characteristics: "統率力・破壊と再生・強力" },
+            { star: "六白金星", element: "金", direction: "北西", characteristics: "指導力・責任感・品格" },
+            { star: "七赤金星", element: "金", direction: "西", characteristics: "愛嬌・表現力・金運" },
+            { star: "八白土星", element: "土", direction: "北東", characteristics: "変革・継承・蓄積" },
+            { star: "九紫火星", element: "火", direction: "南", characteristics: "知性・美意識・名誉" }
+        ];
+
+        // プログレスバー更新
+        function updateProgress(step) {
+            const progress = (step / totalSteps) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
         }
 
-        /* 高コントラスト対応
+        // ローディング表示制御
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            currentStep = 0;
+            updateProgress(0);
+            
+            const interval = setInterval(() => {
+                if (currentStep < totalSteps) {
+                    document.getElementById('loadingSubtext').textContent = loadingMessages[currentStep];
+                    updateProgress(currentStep + 1);
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 400);
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            updateProgress(100);
+            setTimeout(() => {
+                document.getElementById('progressBar').style.width = '0%';
+            }, 1000);
+        }
+
+        // スクロールトップボタン制御
+        window.addEventListener('scroll', () => {
+            const scrollToTop = document.getElementById('scrollToTop');
+            if (window.pageYOffset > 300) {
+                scrollToTop.classList.add('visible');
+            } else {
+                scrollToTop.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 数字還元関数
+        function reduceNumber(num) {
+            while (num > 9 && num !== 11 && num !== 22 && num !== 33) {
+                num = num.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+            }
+            return num;
+        }
+
+        // ライフパスナンバー計算
+        function calculateLifePath(dateString) {
+            const [year, month, day] = dateString.split('-').map(Number);
+            const sum = year + month + day;
+            return reduceNumber(sum);
+        }
+
+        // 九星気学計算
+        function calculateKyusei(year) {
+            const baseYear = 1900;
+            const yearDiff = year - baseYear;
+            const kyuseiIndex = (9 - (yearDiff % 9)) % 9;
+            return kyusei[kyuseiIndex];
+        }
+
+        // 生年月日のセレクトボックス初期化
+        function initializeDateSelectors() {
+            const yearSelect = document.getElementById('yearSelect');
+            const monthSelect = document.getElementById('monthSelect');
+            const daySelect = document.getElementById('daySelect');
+            
+            // 年の選択肢を生成（現在から100年前まで）
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= currentYear - 100; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year + '年';
+                yearSelect.appendChild(option);
+            }
+            
+            // 日の選択肢を更新
+            function updateDays() {
+                const year = parseInt(yearSelect.value);
+                const month = parseInt(monthSelect.value);
+                
+                if (!year || !month) {
+                    daySelect.innerHTML = '<option value="">--</option>';
+                    return;
+                }
+                
+                const daysInMonth = new Date(year, month, 0).getDate();
+                daySelect.innerHTML = '<option value="">--</option>';
+                
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const option = document.createElement('option');
+                    option.value = day;
+                    option.textContent = day + '日';
+                    daySelect.appendChild(option);
+                }
+            }
+            
+            // 年・月変更時に日を更新
+            yearSelect.addEventListener('change', updateDays);
+            monthSelect.addEventListener('change', updateDays);
+        }
+
+        // 生年月日の取得
+        function getBirthDate() {
+            const year = document.getElementById('yearSelect').value;
+            const month = document.getElementById('monthSelect').value;
+            const day = document.getElementById('daySelect').value;
+            
+            if (!year || !month || !day) {
+                return null;
+            }
+            
+            // YYYY-MM-DD形式に変換
+            const monthStr = month.padStart(2, '0');
+            const dayStr = day.padStart(2, '0');
+            return `${year}-${monthStr}-${dayStr}`;
+        }
+
+        // 方位分析
+        function getDirectionalGuidance(kyuseiData) {
+            const directions = {
+                "北": "水のエネルギー - 静寂と内省、学習に適した方位",
+                "北東": "土のエネルギー - 変革と継承、新しい始まりの方位", 
+                "東": "木のエネルギー - 成長と発展、積極性を高める方位",
+                "南東": "木のエネルギー - 社交と信用、人間関係を育む方位",
+                "南": "火のエネルギー - 名声と知性、表現力を高める方位",
+                "南西": "土のエネルギー - 堅実と協調、安定を求める方位",
+                "西": "金のエネルギー - 金運と愛嬌、楽しさを求める方位",
+                "北西": "金のエネルギー - 指導力と品格、責任ある立場の方位",
+                "中央": "全方位のエネルギー - 中心の力、全てを統合する立場"
+            };
+            
+            return directions[kyuseiData.direction] || directions["中央"];
+        }
+
+        // メイン占い実行関数
+        function performReading() {
+            const birthDate = getBirthDate();
+            const button = document.querySelector('.reading-button');
+            const buttonText = document.getElementById('buttonText');
+            
+            if (!birthDate) {
+                // 各セレクトボックスをチェックしてどれが未選択かを確認
+                const year = document.getElementById('yearSelect').value;
+                const month = document.getElementById('monthSelect').value;
+                const day = document.getElementById('daySelect').value;
+                
+                let message = '以下を選択してください：';
+                if (!year) message += ' 年';
+                if (!month) message += ' 月';
+                if (!day) message += ' 日';
+                
+                alert(message);
+                return;
+            }
+            
+            // UX改善：ボタン状態管理
+            button.classList.add('loading');
+            buttonText.textContent = '解析中...';
+            button.disabled = true;
+            
+            showLoading();
+            
+            setTimeout(() => {
+                const lifePathNumber = calculateLifePath(birthDate);
+                const [year, month, day] = birthDate.split('-').map(Number);
+                const kyuseiData = calculateKyusei(year);
+                const numerologyInfo = numerologyData[lifePathNumber];
+                
+                if (!numerologyInfo) {
+                    alert('エラーが発生しました。もう一度お試しください。');
+                    hideLoading();
+                    button.classList.remove('loading');
+                    buttonText.textContent = '統合リーディング開始';
+                    button.disabled = false;
+                    return;
+                }
+                
+                // 結果HTML生成
+                const resultHTML = generateEnhancedResultHTML(lifePathNumber, numerologyInfo, kyuseiData, birthDate);
+                
+                hideLoading();
+                
+                // 結果表示
+                document.getElementById('resultSection').innerHTML = resultHTML;
+                document.getElementById('resultSection').classList.add('show');
+                
+                // ボタン復旧
+                button.classList.remove('loading');
+                buttonText.textContent = '再度リーディング';
+                button.disabled = false;
+                
+                // アニメーション付きスクロール
+                setTimeout(() => {
+                    document.getElementById('resultSection').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }, 300);
+                
+                // 結果カードの順次アニメーション
+                animateResultCards();
+                
+            }, 3000);
+        }
+
+        // 強化された結果HTML生成
+        function generateEnhancedResultHTML(lifePathNumber, numerologyInfo, kyuseiData, birthDate) {
+            const isMasterNumber = lifePathNumber === 11 || lifePathNumber === 22 || lifePathNumber === 33;
+            const directionalGuidance = getDirectionalGuidance(kyuseiData);
+            
+            return `
+                <div class="result-card slide-in-left">
+                    <h2 class="result-title">🔮 あなたの統合数秘術リーディング結果</h2>
+                    
+                    <div class="number-display">
+                        <div class="life-path-number">${lifePathNumber}</div>
+                        ${isMasterNumber ? '<div class="master-number-badge">✨ マスターナンバー - 特別な使命を持つ魂 ✨</div>' : ''}
+                        <div class="sephirot-info">
+                            <strong>生命の樹：${numerologyInfo.sephirot}</strong><br>
+                            象徴：${numerologyInfo.meaning}
+                        </div>
+                    </div>
+
+                    <div class="result-content">
+                        <div class="section-header">💫 あなたの魂の本質</div>
+                        <p>${numerologyInfo.lifeTheme}</p>
+                        
+                        <div class="section-header">✨ 主要な特質</div>
+                        <div class="characteristics-grid">
+                            ${numerologyInfo.characteristics.map((char, index) => `
+                                <div class="characteristic-item slide-in-${index % 2 === 0 ? 'left' : 'right'}" style="animation-delay: ${index * 0.1}s">
+                                    <h4>✨ 特質 ${index + 1}</h4>
+                                    <p>${char}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="section-header">🎯 成長への道筋</div>
+                        <p>${numerologyInfo.growthChallenge}</p>
+
+                        <div class="section-header">🌟 人生の使命</div>
+                        <p>${numerologyInfo.lifePurpose}</p>
+
+                        <div class="section-header">💼 適性分野</div>
+                        <div class="characteristics-grid">
+                            ${numerologyInfo.careerGuidance.map((career, index) => `
+                                <div class="characteristic-item fade-in" style="animation-delay: ${index * 0.2}s">
+                                    <h4>🎯 推奨分野 ${index + 1}</h4>
+                                    <p>${career}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="section-header">🧭 九星気学による方位指導</div>
+                        <div class="characteristic-item">
+                            <h4>🌟 あなたの本命星：${kyuseiData.star}</h4>
+                            <p><strong>基本性質：</strong>${kyuseiData.characteristics}</p>
+                            <p><strong>主要方位：</strong>${kyuseiData.direction}方向</p>
+                            <p><strong>方位エネルギー：</strong>${directionalGuidance}</p>
+                            <p><strong>活用方法：</strong>特に${kyuseiData.direction}方向への移住や旅行、重要な商談などは運気上昇につながります。また、${kyuseiData.element}のエネルギーがあなたの本質を支えているため、${kyuseiData.element}に関連する色や素材を身に着けることで運気が向上します。</p>
+                        </div>
+
+                        <div class="section-header">💎 推奨パワーストーン</div>
+                        <div class="stone-recommendation">
+                            <p>ライフパスナンバー ${lifePathNumber} に最適な天然石をご紹介します：</p>
+                            <div class="stone-grid">
+                                ${numerologyInfo.stones.map((stone, index) => `
+                                    <div class="stone-item fade-in" style="animation-delay: ${index * 0.3}s">
+                                        <div class="stone-name">${stone.name}</div>
+                                        <div class="stone-effect">${stone.effect}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="section-header">⚠️ 注意すべきポイント</div>
+                        <div class="warning-section">
+                            <h3>人生の落とし穴</h3>
+                            <p><strong>主な課題：</strong> ${numerologyInfo.growthChallenge}</p>
+                            <p><strong>対処法：</strong> 定期的な自己反省と信頼できる人からのフィードバックが重要です。完璧を求めすぎず、成長過程を楽しむ心を大切にしましょう。</p>
+                        </div>
+
+                        <div class="section-header">🎭 長期的な人生展望</div>
+                        <p><strong>あなたの人生の軌跡：</strong> ${numerologyInfo.longTermPerspective}</p>
+                        
+                        <div class="section-header">📜 統合メッセージ</div>
+                        <div class="characteristic-item" style="background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(255, 215, 0, 0.05)); border: 2px solid rgba(218, 165, 32, 0.3);">
+                            <h4>🌟 古代叡智からのメッセージ</h4>
+                            <p>古代から現代に受け継がれる9つの数秘術体系（ピタゴラス式・カルデアン式・カバラ式・タミル式・九星気学・易数・マヤ暦・ヘブライゲマトリア）があなたの運命を統合的に解き明かしました。</p>
+                            <p>ライフパスナンバー <strong>${lifePathNumber}</strong> として生まれたあなたは、カバラ生命の樹における <strong>「${numerologyInfo.sephirot}」</strong> の神聖なエネルギーを体現し、九星気学では <strong>「${kyuseiData.star}」</strong> の ${kyuseiData.element} の力に支えられています。</p>
+                            <p>この統合的な視点から見えてくるのは、あなたが単なる個人を超えた宇宙的な使命を帯びた存在であるということです。推奨されたパワーストーンの力を借りながら、人生の各段階で示される導きに従い、あなた独自の魂の道を歩んでください。</p>
+                            <p><strong>最後に：</strong>数秘術は自己理解の一つの手段です。この結果を参考にしながらも、最終的にはあなた自身の直感と判断を大切にし、充実した人生を築いていってください。</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // 結果カードのアニメーション制御
+        function animateResultCards() {
+            const cards = document.querySelectorAll('.result-card .characteristic-item, .result-card .stone-item');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s forwards`;
+                }, 100);
+            });
+        }
+
+        // 背景キラキラエフェクト
+        function createBackgroundSparkles() {
+            const sparkle = document.createElement('div');
+            sparkle.style.position = 'fixed';
+            sparkle.style.width = '3px';
+            sparkle.style.height = '3px';
+            sparkle.style.background = 'var(--gold-color)';
+            sparkle.style.borderRadius = '50%';
+            sparkle.style.left = Math.random() * window.innerWidth + 'px';
+            sparkle.style.top = Math.random() * window.innerHeight + 'px';
+            sparkle.style.animation = 'sparkle 4s ease-in-out infinite';
+            sparkle.style.pointerEvents = 'none';
+            sparkle.style.zIndex = '1';
+            sparkle.style.boxShadow = '0 0 6px var(--gold-color)';
+            sparkle.style.opacity = '0.7';
+            
+            document.body.appendChild(sparkle);
+            
+            setTimeout(() => sparkle.remove(), 4000);
+        }
+
+        // パフォーマンス最適化：背景エフェクトの制御
+        let sparkleInterval;
+        
+        function startSparkleEffect() {
+            sparkleInterval = setInterval(createBackgroundSparkles, 1500);
+        }
+
+        function stopSparkleEffect() {
+            clearInterval(sparkleInterval);
+        }
+
+        // ページ表示時のみエフェクト実行
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden) {
+                stopSparkleEffect();
+            } else {
+                startSparkleEffect();
+            }
+        });
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 生年月日セレクター初期化
+            initializeDateSelectors();
+            
+            // エフェクト開始
+            startSparkleEffect();
+            
+            // フォーカス管理
+            const selects = document.querySelectorAll('.date-select');
+            selects.forEach(select => {
+                select.addEventListener('focus', function() {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.borderColor = 'var(--accent-color)';
+                });
+                
+                select.addEventListener('blur', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.borderColor = 'rgba(139, 69, 19, 0.3)';
+                });
+                
+                select.addEventListener('change', function() {
+                    if (this.value) {
+                        this.style.borderColor = '#22c55e';
+                    }
+                });
+            });
+            
+            // タッチデバイス検出とUI調整
+            if ('ontouchstart' in window) {
+                document.body.classList.add('touch-device');
+                // タッチデバイス用の追加スタイル
+                const touchStyle = document.createElement('style');
+                touchStyle.textContent = `
+                    .touch-device .reading-button:hover {
+                        transform: none;
+                    }
+                    .touch-device .reading-button:active {
+                        transform: scale(0.95);
+                        background: linear-gradient(135deg, #7a3f11 0%, #b8743a 50%, #c49620 100%);
+                    }
+                `;
+                document.head.appendChild(touchStyle);
+            }
+        });
+
+        // アクセシビリティ向上
+        document.addEventListener('keydown', function(e) {
+            // Enterキーでリーディング実行
+            if (e.key === 'Enter' && e.target.classList.contains('date-select')) {
+                const year = document.getElementById('yearSelect').value;
+                const month = document.getElementById('monthSelect').value;
+                const day = document.getElementById('daySelect').value;
+                
+                if (year && month && day) {
+                    e.preventDefault();
+                    performReading();
+                }
+            }
+            
+            // Escapeキーでローディング中止
+            if (e.key === 'Escape' && document.getElementById('loadingOverlay').style.display === 'flex') {
+                hideLoading();
+                const button = document.querySelector('.reading-button');
+                if (button) {
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                    document.getElementById('buttonText').textContent = '統合リーディング開始';
+                }
+            }
+        });
+
+        // エラーハンドリング
+        window.addEventListener('error', function(e) {
+            console.error('エラーが発生しました:', e.error);
+            hideLoading();
+            const button = document.querySelector('.reading-button');
+            if (button) {
+                button.classList.remove('loading');
+                button.disabled = false;
+                document.getElementById('buttonText').textContent = '統合リーディング開始';
+            }
+        });
+
+        // レスポンシブ対応の追加制御
+        function handleResize() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('orientationchange', handleResize);
+        handleResize(); // 初期実行
+
+        // パフォーマンス監視
+        if ('performance' in window) {
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    if (perfData && perfData.loadEventEnd - perfData.loadEventStart > 3000) {
+                        console.warn('ページの読み込みが遅い可能性があります');
+                    }
+                }, 0);
+            });
+        }
+    </script>
+</body>
+</html>
